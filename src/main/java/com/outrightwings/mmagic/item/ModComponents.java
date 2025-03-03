@@ -18,13 +18,13 @@ public class ModComponents {
     public static final DeferredRegister.DataComponents COMPONENTS = DeferredRegister.createDataComponents(Main.MODID);
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<SelectedElementsComponent.SelectedElements>> SELECTED_ELEMENTS_COMPONENT = COMPONENTS.registerComponentType(
-            "basic",
+            "elements",
             builder -> builder
                     .persistent(SELECTED_ELEMENTS_CODEC)
                     .networkSynchronized(SELECTED_ELEMENTS_STREAM_CODEC)
     );
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<SelectedFormComponent.SelectedForm>> SELECTED_FORM_COMPONENT = COMPONENTS.registerComponentType(
-            "basic",
+            "form",
             builder -> builder
                     .persistent(SELECTED_FORM_CODEC)
                     .networkSynchronized(SELECTED_FORM_STREAM_CODEC)
