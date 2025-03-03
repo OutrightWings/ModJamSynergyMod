@@ -22,8 +22,8 @@ public class ElementScreen extends AbstractContainerScreen<ElementMenu> {
     private final int ELEMENT_BUTTON_SIZE = 32;
     private final int[][] ELEMENT_BUTTON_CORNERS = {{48,16},{96,16},{128,64},{96,112},{48,112},{16,64}}; //in element order 0-5
     private final int ELEMENT_SMALL_ICON_SIZE = 10;
-    private final int SELECTED_BAR_X = 53;
-    private final int SELECTED_BAR_Y = 154;
+    private final int SELECTED_BAR_X = 71;
+    private final int SELECTED_BAR_Y = 69;
     private final int SELECTED_BAR_GAP = 2;
 
     private final int ELEMENT_HIGHLIGHT_X = 256-ELEMENT_BUTTON_SIZE;
@@ -60,7 +60,7 @@ public class ElementScreen extends AbstractContainerScreen<ElementMenu> {
         int[] list = selectedElements.elements();
         for(int i = 0; i < list.length; i++){
             if(list[i] != 0){
-                gui.blit(BG_LOCATION, SELECTED_BAR_X+x+((ELEMENT_SMALL_ICON_SIZE+2) *i), SELECTED_BAR_Y+y, 256-ELEMENT_SMALL_ICON_SIZE, ELEMENT_SMALL_ICON_SIZE*(list[i]-1), ELEMENT_SMALL_ICON_SIZE, ELEMENT_SMALL_ICON_SIZE);
+                gui.blit(BG_LOCATION, SELECTED_BAR_X+x+((ELEMENT_SMALL_ICON_SIZE+2) *(i%3)), SELECTED_BAR_Y+y+((ELEMENT_SMALL_ICON_SIZE+2) *(i/3)), 256-ELEMENT_SMALL_ICON_SIZE, ELEMENT_SMALL_ICON_SIZE*(list[i]-1), ELEMENT_SMALL_ICON_SIZE, ELEMENT_SMALL_ICON_SIZE);
             }
         }
     }
