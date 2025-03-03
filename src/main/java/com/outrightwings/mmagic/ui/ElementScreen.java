@@ -3,6 +3,7 @@ package com.outrightwings.mmagic.ui;
 import com.outrightwings.mmagic.Main;
 import com.outrightwings.mmagic.elements.Elements;
 import com.outrightwings.mmagic.item.ModComponents;
+import com.outrightwings.mmagic.item.components.SelectedElementsComponent;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.component.DataComponents;
@@ -56,7 +57,7 @@ public class ElementScreen extends AbstractContainerScreen<ElementMenu> {
 
         //Loop through selected on wand
         ItemStack wand = inventory.getItem(inventory.selected);
-        ModComponents.SelectedElements selectedElements = wand.get(ModComponents.SELECTED_ELEMENTS_COMPONENT);
+        SelectedElementsComponent.SelectedElements selectedElements = wand.get(ModComponents.SELECTED_ELEMENTS_COMPONENT);
         int[] list = selectedElements.elements();
         for(int i = 0; i < list.length; i++){
             if(list[i] != 0){
@@ -85,7 +86,7 @@ public class ElementScreen extends AbstractContainerScreen<ElementMenu> {
     }
     private void addElement(int id){
         ItemStack wand = inventory.getItem(inventory.selected);
-        ModComponents.SelectedElements selectedElements = wand.get(ModComponents.SELECTED_ELEMENTS_COMPONENT);
+        SelectedElementsComponent.SelectedElements selectedElements = wand.get(ModComponents.SELECTED_ELEMENTS_COMPONENT);
         int[] list = selectedElements.elements();
         for(int i = 0; i < list.length; i++){
             if(list[i] == 0){
@@ -94,6 +95,6 @@ public class ElementScreen extends AbstractContainerScreen<ElementMenu> {
                 break;
             }
         }
-        wand.set(ModComponents.SELECTED_ELEMENTS_COMPONENT,new ModComponents.SelectedElements(list));
+        wand.set(ModComponents.SELECTED_ELEMENTS_COMPONENT,new SelectedElementsComponent.SelectedElements(list));
     }
 }
