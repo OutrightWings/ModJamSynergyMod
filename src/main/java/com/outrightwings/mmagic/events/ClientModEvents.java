@@ -1,6 +1,7 @@
 package com.outrightwings.mmagic.events;
 
 import com.outrightwings.mmagic.Main;
+import com.outrightwings.mmagic.item.components.SelectedFormComponent;
 import com.outrightwings.mmagic.ui.ElementScreen;
 import com.outrightwings.mmagic.ui.ModMenus;
 import net.neoforged.api.distmarker.Dist;
@@ -16,8 +17,7 @@ public class ClientModEvents {
     @SubscribeEvent
     public static void clientInit(FMLClientSetupEvent event){
         NeoForge.EVENT_BUS.addListener((InputEvent.MouseScrollingEvent e) -> {
-            Main.LOGGER.debug("SCROLLLLLL");
-            var cancel = false;//ShiftScrollListener.onScrollInGameplay(e.getScrollDelta());
+            var cancel = ScrollListener.onScroll(e.getScrollDeltaY());
             e.setCanceled(cancel);
         });
     }

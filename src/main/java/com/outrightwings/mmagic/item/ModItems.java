@@ -3,6 +3,7 @@ package com.outrightwings.mmagic.item;
 import com.outrightwings.mmagic.Main;
 import com.outrightwings.mmagic.elements.Elements;
 import com.outrightwings.mmagic.item.components.SelectedElementsComponent;
+import com.outrightwings.mmagic.item.components.SelectedFormComponent;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -16,7 +17,11 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public class ModItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(Main.MODID);
 
-    public static final DeferredItem<Item> WAND = ITEMS.register("wand",()->new Wand(new Item.Properties().stacksTo(1).component(ModComponents.SELECTED_ELEMENTS_COMPONENT.value(),new SelectedElementsComponent.SelectedElements(new int[Elements.MAX_SELECTED]))));
+    public static final DeferredItem<Item> WAND = ITEMS.register("wand",()->new Wand(new Item.Properties()
+            .stacksTo(1)
+            .component(ModComponents.SELECTED_ELEMENTS_COMPONENT.value(),new SelectedElementsComponent.SelectedElements(new int[Elements.MAX_SELECTED]))
+            .component(ModComponents.SELECTED_FORM_COMPONENT.value(),new SelectedFormComponent.SelectedForm(0))
+    ));
     //public static final DeferredItem<BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.registerSimpleBlockItem("example_block", EXAMPLE_BLOCK);
     //public static final DeferredItem<Item> EXAMPLE_ITEM = ITEMS.registerSimpleItem("example_item", new Item.Properties().food(new FoodProperties.Builder().alwaysEdible().nutrition(1).saturationModifier(2f).build()));
 
@@ -28,6 +33,6 @@ public class ModItems {
         .withTabsBefore(CreativeModeTabs.COMBAT)
         .icon(() -> WAND.get().getDefaultInstance())
         .displayItems((parameters, output) -> {
-            output.accept(WAND.get()); // Add the example item to the tab.
+            output.accept(WAND.get()); // Add the item to the tab.
         }).build());
 }
