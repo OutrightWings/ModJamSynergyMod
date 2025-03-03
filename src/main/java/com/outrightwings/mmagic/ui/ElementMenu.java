@@ -9,6 +9,8 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 public class ElementMenu extends AbstractContainerMenu {
+
+
     public ElementMenu(int id, Inventory inventory) {
         this(id, inventory, ContainerLevelAccess.NULL);
     }
@@ -25,6 +27,5 @@ public class ElementMenu extends AbstractContainerMenu {
     public boolean stillValid(Player pPlayer) {
         return true;
     }
-
 
 }
