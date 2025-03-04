@@ -86,7 +86,6 @@ public class ElementScreen extends AbstractContainerScreen<ElementMenu> {
         int[] list = selectedElements.elements();
         for(int i = 0; i < list.length; i++){
             if(list[i] == 0){
-                //todo Fancy logic when you selected conflicting types. Life cancells out death/ maybe water + fire = steam?
                 list[i] = id;
                 break;
             }
