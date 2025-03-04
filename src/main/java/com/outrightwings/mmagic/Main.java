@@ -1,10 +1,13 @@
 package com.outrightwings.mmagic;
 
 import com.outrightwings.mmagic.blocks.ModBlocks;
+import com.outrightwings.mmagic.entity.ModEntities;
 import com.outrightwings.mmagic.events.ClientModEvents;
 import com.outrightwings.mmagic.item.components.ModComponents;
 import com.outrightwings.mmagic.item.ModItems;
 import com.outrightwings.mmagic.ui.ModMenus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -27,7 +30,7 @@ public class Main
         ModMenus.MENUS.register(modEventBus);
         ModComponents.COMPONENTS.register(modEventBus);
         ModItems.CREATIVE_MODE_TABS.register(modEventBus);
-
+        ModEntities.ENTITIES.register(modEventBus);
         modEventBus.register(ClientModEvents.class);
 
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us
@@ -36,5 +39,4 @@ public class Main
 
     private void commonSetup(final FMLCommonSetupEvent event) {
     }
-
 }

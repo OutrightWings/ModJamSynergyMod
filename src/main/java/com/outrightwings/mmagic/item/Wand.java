@@ -1,6 +1,8 @@
 package com.outrightwings.mmagic.item;
 
 import com.outrightwings.mmagic.Main;
+import com.outrightwings.mmagic.entity.MagicBall;
+import com.outrightwings.mmagic.entity.ModEntities;
 import com.outrightwings.mmagic.item.components.ModComponents;
 import com.outrightwings.mmagic.item.components.SelectedFormComponent;
 import com.outrightwings.mmagic.ui.ElementMenu;
@@ -48,9 +50,9 @@ public class Wand extends Item implements ILeftClickReact {
             //Do things if elements
             if(elements[0] != 0){
                 ItemStack itemstack = player.getItemInHand(hand);
-                Snowball snowball = new Snowball(level, player);
+                var snowball = MagicBall.spawnAtPlayer(player,level);
                 snowball.setItem(itemstack);
-                snowball.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.5F, 1.0F);
+                snowball.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, 1.5F, 1.0F);
                 level.addFreshEntity(snowball);
                 player.awardStat(Stats.ITEM_USED.get(this));
 

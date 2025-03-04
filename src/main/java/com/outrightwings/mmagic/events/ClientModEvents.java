@@ -1,9 +1,12 @@
 package com.outrightwings.mmagic.events;
 
 import com.outrightwings.mmagic.Main;
+import com.outrightwings.mmagic.entity.ModEntities;
 import com.outrightwings.mmagic.item.components.SelectedFormComponent;
 import com.outrightwings.mmagic.ui.ElementScreen;
 import com.outrightwings.mmagic.ui.ModMenus;
+import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -16,6 +19,7 @@ import net.neoforged.neoforge.common.NeoForge;
 public class ClientModEvents {
     @SubscribeEvent
     public static void clientInit(FMLClientSetupEvent event){
+        EntityRenderers.register(ModEntities.MAGIC_BALL.get(), ThrownItemRenderer::new);
         NeoForge.EVENT_BUS.addListener((InputEvent.MouseScrollingEvent e) -> {
             var cancel = ScrollListener.onScroll(e.getScrollDeltaY());
             e.setCanceled(cancel);
