@@ -1,4 +1,4 @@
-package com.outrightwings.mmagic.item;
+package com.outrightwings.mmagic.item.components;
 
 import com.outrightwings.mmagic.Main;
 import com.outrightwings.mmagic.item.components.SelectedElementsComponent;

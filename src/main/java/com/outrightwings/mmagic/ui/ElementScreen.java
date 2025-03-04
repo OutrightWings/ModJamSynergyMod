@@ -1,14 +1,10 @@
 package com.outrightwings.mmagic.ui;
 
 import com.outrightwings.mmagic.Main;
-import com.outrightwings.mmagic.elements.Elements;
-import com.outrightwings.mmagic.item.ModComponents;
+import com.outrightwings.mmagic.item.components.ModComponents;
 import com.outrightwings.mmagic.item.components.SelectedElementsComponent;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;

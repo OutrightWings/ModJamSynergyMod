@@ -2,6 +2,7 @@ package com.outrightwings.mmagic.item;
 
 import com.outrightwings.mmagic.Main;
 import com.outrightwings.mmagic.ui.ElementMenu;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -11,6 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class Wand extends Item {
     public Wand(Properties pProperties) {
@@ -23,5 +25,9 @@ public class Wand extends Item {
             serverPlayer.openMenu(new SimpleMenuProvider((i,inventory,playerE)-> new ElementMenu(i,inventory), Component.translatable(Main.MODID+".elemental_gui")));
         }
         return InteractionResultHolder.sidedSuccess(player.getItemInHand(hand),level.isClientSide);
+    }
+    @Override
+    public boolean canAttackBlock(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer) {
+        return !pPlayer.isCreative();
     }
 }

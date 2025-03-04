@@ -2,7 +2,7 @@ package com.outrightwings.mmagic;
 
 import com.outrightwings.mmagic.blocks.ModBlocks;
 import com.outrightwings.mmagic.events.ClientModEvents;
-import com.outrightwings.mmagic.item.ModComponents;
+import com.outrightwings.mmagic.item.components.ModComponents;
 import com.outrightwings.mmagic.item.ModItems;
 import com.outrightwings.mmagic.ui.ModMenus;
 import org.slf4j.Logger;

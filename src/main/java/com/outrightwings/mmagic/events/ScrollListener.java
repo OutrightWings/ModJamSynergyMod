@@ -1,8 +1,7 @@
 package com.outrightwings.mmagic.events;
 
-import com.outrightwings.mmagic.Main;
 import com.outrightwings.mmagic.elements.Elements;
-import com.outrightwings.mmagic.item.ModComponents;
+import com.outrightwings.mmagic.item.components.ModComponents;
 import com.outrightwings.mmagic.item.ModItems;
 import com.outrightwings.mmagic.item.components.SelectedFormComponent;
 import net.minecraft.client.Minecraft;

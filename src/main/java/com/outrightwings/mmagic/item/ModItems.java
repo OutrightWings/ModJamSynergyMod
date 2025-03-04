@@ -2,6 +2,7 @@ package com.outrightwings.mmagic.item;
 
 import com.outrightwings.mmagic.Main;
 import com.outrightwings.mmagic.elements.Elements;
+import com.outrightwings.mmagic.item.components.ModComponents;
 import com.outrightwings.mmagic.item.components.SelectedElementsComponent;
 import com.outrightwings.mmagic.item.components.SelectedFormComponent;
 import net.minecraft.core.registries.Registries;
@@ -9,7 +10,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
-import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
