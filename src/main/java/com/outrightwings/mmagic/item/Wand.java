@@ -9,6 +9,7 @@ import com.outrightwings.mmagic.ui.ElementMenu;
 import net.mehvahdjukaar.moonlight.api.item.ILeftClickReact;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -20,6 +21,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Snowball;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -50,10 +53,10 @@ public class Wand extends Item implements ILeftClickReact {
             //Do things if elements
             if(elements[0] != 0){
                 ItemStack itemstack = player.getItemInHand(hand);
-                var snowball = MagicBall.spawnAtPlayer(player,level);
-                snowball.setItem(itemstack);
-                snowball.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, 1.5F, 1.0F);
-                level.addFreshEntity(snowball);
+                itemstack.set(DataComponents.POTION_CONTENTS, new PotionContents(Potions.POISON));
+
+                var m = MagicBall.spawnAndShootAtPlayer(player,level);
+                m.setItem(itemStack);
                 player.awardStat(Stats.ITEM_USED.get(this));
 
                 return true;
