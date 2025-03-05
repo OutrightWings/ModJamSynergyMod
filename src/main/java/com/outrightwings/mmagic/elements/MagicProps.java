@@ -54,7 +54,7 @@ public class MagicProps {
         MagicBall m = MagicBall.spawnAtPlayer(player,level);
         m.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, velocity, inaccuracy);
         m.setNoGravity(true);
-        level.addFreshEntity(m);
+        m.placeInWorld(level);
     }
     private void spawnSpray(Player player, Level level, Vec3 start, Vec3 direction){
         Random random = new Random();
@@ -68,12 +68,12 @@ public class MagicProps {
             m.shootFromRotation(player, pitch, yaw, 0, velocity, inaccuracy);
             m.setNoGravity(true);
             m.setMaxAge(5);
-            level.addFreshEntity(m);
+            m.placeInWorld(level);
         }
     }
     private void spawnBall(Player player, Level level){
         MagicBall m = MagicBall.spawnAtPlayer(player,level);
         m.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, velocity, inaccuracy);
-        level.addFreshEntity(m);
+        m.placeInWorld(level);
     }
 }
