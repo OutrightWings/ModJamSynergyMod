@@ -2,12 +2,12 @@ package com.outrightwings.mmagic.elements;
 
 public class Elements {
     public static final int MAX_SELECTED = 6;
-    public enum forms{
+    public enum CastingForms {
         RAY,
         WALL,
         SELF
     }
-    public enum element{
+    public enum ElementType {
         NONE,
         FIRE,
         ICE,
@@ -15,5 +15,10 @@ public class Elements {
         LIFE,
         DEATH,
         WATER
+    }
+    public enum AttackForms {
+        SPRAY,
+        PROJECTILE,
+        BEAM
     }
 }

@@ -1,9 +1,12 @@
 package com.outrightwings.mmagic.item;
 
 import com.outrightwings.mmagic.Main;
+import com.outrightwings.mmagic.elements.Elements;
+import com.outrightwings.mmagic.elements.MagicProps;
 import com.outrightwings.mmagic.entity.MagicBall;
 import com.outrightwings.mmagic.entity.ModEntities;
 import com.outrightwings.mmagic.item.components.ModComponents;
+import com.outrightwings.mmagic.item.components.SelectedElementsComponent;
 import com.outrightwings.mmagic.item.components.SelectedFormComponent;
 import com.outrightwings.mmagic.ui.ElementMenu;
 import net.mehvahdjukaar.moonlight.api.item.ILeftClickReact;
@@ -25,7 +28,7 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-
+//todo add tooltips/tell player what they have selected
 public class Wand extends Item implements ILeftClickReact {
     public Wand(Properties pProperties) {
         super(pProperties);
@@ -34,9 +37,16 @@ public class Wand extends Item implements ILeftClickReact {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand){
         if(!level.isClientSide && player instanceof ServerPlayer serverPlayer){
-            serverPlayer.openMenu(new SimpleMenuProvider((i,inventory,playerE)-> new ElementMenu(i,inventory), Component.translatable(Main.MODID+".elemental_gui")));
+            if(player.isShiftKeyDown()){
+                clearElements(player.getItemInHand(hand));
+            }else{
+                serverPlayer.openMenu(new SimpleMenuProvider((i,inventory,playerE)-> new ElementMenu(i,inventory), Component.translatable(Main.MODID+".elemental_gui")));
+            }
         }
         return InteractionResultHolder.sidedSuccess(player.getItemInHand(hand),level.isClientSide);
+    }
+    public void clearElements(ItemStack item){
+        item.set(ModComponents.SELECTED_ELEMENTS_COMPONENT,new SelectedElementsComponent.SelectedElements(new int[Elements.MAX_SELECTED]));
     }
     @Override
     public boolean canAttackBlock(BlockState pState, Level level, BlockPos pPos, Player player) {
@@ -52,14 +62,8 @@ public class Wand extends Item implements ILeftClickReact {
             int[] elements = itemStack.get(ModComponents.SELECTED_ELEMENTS_COMPONENT).elements();
             //Do things if elements
             if(elements[0] != 0){
-                ItemStack itemstack = player.getItemInHand(hand);
-                itemstack.set(DataComponents.POTION_CONTENTS, new PotionContents(Potions.POISON));
-
-                var m = MagicBall.spawnAndShootAtPlayer(player,level);
-                m.setItem(itemStack);
-                player.awardStat(Stats.ITEM_USED.get(this));
-
-                return true;
+                var props = new MagicProps(form, elements);
+                return props.cast(player,level,itemStack);
             }
         }
         return false;

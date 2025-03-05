@@ -22,8 +22,8 @@ public class ScrollListener {
                     cancel = true;
                     int form = item.get(ModComponents.SELECTED_FORM_COMPONENT).id();
                     form += ((int)delta);
-                    form = form >= Elements.forms.values().length ? 0 : form;
-                    form = form < 0 ? Elements.forms.values().length-1 : form;
+                    form = form >= Elements.CastingForms.values().length ? 0 : form;
+                    form = form < 0 ? Elements.CastingForms.values().length-1 : form;
                     item.set(ModComponents.SELECTED_FORM_COMPONENT, new SelectedFormComponent.SelectedForm(form));
                 }
             }
