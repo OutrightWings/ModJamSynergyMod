@@ -31,8 +31,6 @@ minecraft {
         file('src/main/resources/META-INF/accesstransformer.cfg')
     }
 }
-// Default run configurations.
-// These can be tweaked, removed, or duplicated as needed.
 runs {
     // applies to all the run configs below
     configureEach {
@@ -69,11 +67,6 @@ dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
     implementation "curse.maven:selene-499980:6254821"
 }
-
-// This block of code expands all declared replace properties in the specified resource targets.
-// A missing property will result in an error. Properties are expanded using ${} Groovy notation.
-// When "copyIdeResources" is enabled, this will also run before the game launches in IDE environments.
-// See https://docs.gradle.org/current/dsl/org.gradle.language.jvm.tasks.ProcessResources.html
 tasks.withType(ProcessResources).configureEach {
     var replaceProperties = [
             minecraft_version      : minecraft_version,
@@ -113,7 +106,6 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }
 
-// IDEA no longer automatically downloads sources/javadoc jars for dependencies, so we need to explicitly enable the behavior.
 idea {
     module {
         downloadSources = true
