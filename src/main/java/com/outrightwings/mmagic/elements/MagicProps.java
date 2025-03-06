@@ -5,6 +5,8 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
@@ -30,7 +32,6 @@ public class MagicProps {
                 break;
             case ICE:
                 //Projectile form
-                itemStack.set(DataComponents.POTION_CONTENTS, new PotionContents(Potions.POISON));
                 spawnBall(player, level);
                 break;
             case LIFE:
@@ -49,11 +50,12 @@ public class MagicProps {
         player.awardStat(Stats.ITEM_USED.get(itemStack.getItem()));
         return true;
     }
-    //Todo offset to hand slightly
+
     private void spawnBeam(Player player, Level level){
-        MagicBall m = MagicBall.spawnAtPlayer(player,level);
+        MagicBall m = MagicBall.spawnAtPlayer(player,level,createPotion());
         m.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, velocity, inaccuracy);
         m.setNoGravity(true);
+        m.setItem(Items.SNOWBALL.getDefaultInstance());
         m.placeInWorld(level);
     }
     private void spawnSpray(Player player, Level level, Vec3 start, Vec3 direction){
@@ -64,16 +66,21 @@ public class MagicProps {
             float pitch = player.getXRot() + (random.nextFloat() * spread - spread/2);
             float yaw = player.getYRot() + (random.nextFloat() * spread - spread/2);
 
-            MagicBall m = MagicBall.spawnAtPlayer(player,level);
+            MagicBall m = MagicBall.spawnAtPlayer(player,level,createPotion());
             m.shootFromRotation(player, pitch, yaw, 0, velocity, inaccuracy);
             m.setNoGravity(true);
             m.setMaxAge(5);
+            m.setItem(Items.SNOWBALL.getDefaultInstance());
             m.placeInWorld(level);
         }
     }
     private void spawnBall(Player player, Level level){
-        MagicBall m = MagicBall.spawnAtPlayer(player,level);
+        MagicBall m = MagicBall.spawnAtPlayer(player,level, createPotion() );
+        m.setItem(Items.SNOWBALL.getDefaultInstance());
         m.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, velocity, inaccuracy);
         m.placeInWorld(level);
+    }
+    private ItemStack createPotion(){
+        return PotionContents.createItemStack(Items.SPLASH_POTION,Potions.POISON);
     }
 }
