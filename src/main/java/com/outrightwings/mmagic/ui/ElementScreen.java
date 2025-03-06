@@ -57,7 +57,7 @@ public class ElementScreen extends AbstractContainerScreen<ElementMenu> {
         int[] list = selectedElements.elements();
         for(int i = 0; i < list.length; i++){
             if(list[i] != 0){
-                gui.blit(BG_LOCATION, SELECTED_BAR_X+x+((ELEMENT_SMALL_ICON_SIZE+2) *(i%3)), SELECTED_BAR_Y+y+((ELEMENT_SMALL_ICON_SIZE+2) *(i/3)), 256-ELEMENT_SMALL_ICON_SIZE, ELEMENT_SMALL_ICON_SIZE*(list[i]-1), ELEMENT_SMALL_ICON_SIZE, ELEMENT_SMALL_ICON_SIZE);
+                gui.blit(BG_LOCATION, SELECTED_BAR_X+x+((ELEMENT_SMALL_ICON_SIZE+SELECTED_BAR_GAP) *(i%3)), SELECTED_BAR_Y+y+((ELEMENT_SMALL_ICON_SIZE+SELECTED_BAR_GAP) *(i/3)), 256-ELEMENT_SMALL_ICON_SIZE, ELEMENT_SMALL_ICON_SIZE*(list[i]-1), ELEMENT_SMALL_ICON_SIZE, ELEMENT_SMALL_ICON_SIZE);
             }
         }
     }
