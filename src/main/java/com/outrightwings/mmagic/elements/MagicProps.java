@@ -29,7 +29,7 @@ public class MagicProps {
         String x = "";
         for(int i : elementCounts)
             x += i + " ";
-        Main.LOGGER.debug(x);
+        Main.LOGGER.debug(x + " " + form);
 
     }
     private int[] countElements(){
