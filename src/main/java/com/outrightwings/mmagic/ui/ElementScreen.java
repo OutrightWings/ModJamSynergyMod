@@ -16,15 +16,15 @@ import net.neoforged.api.distmarker.OnlyIn;
 public class ElementScreen extends AbstractContainerScreen<ElementMenu> {
     private static final ResourceLocation BG_LOCATION = ResourceLocation.fromNamespaceAndPath(Main.MODID,"textures/gui/container/element_gui.png");
 
-    private final int ELEMENT_BUTTON_SIZE = 32;
-    private final int[][] ELEMENT_BUTTON_CORNERS = {{48,16},{96,16},{128,64},{96,112},{48,112},{16,64}}; //in element order 0-5
-    private final int ELEMENT_SMALL_ICON_SIZE = 10;
-    private final int SELECTED_BAR_X = 71;
-    private final int SELECTED_BAR_Y = 69;
-    private final int SELECTED_BAR_GAP = 2;
+    private final int ELEMENT_BUTTON_SIZE = 29;
+    private final int[][] ELEMENT_BUTTON_CORNERS = {{50,17},{98,17},{130,65},{98,113},{50,113},{18,65}}; //in element order 0-5
+    private final int ELEMENT_SMALL_ICON_SIZE = 11;
+    private final int SELECTED_BAR_X = 69;
+    private final int SELECTED_BAR_Y = 67;
+    private final int SELECTED_BAR_GAP = 3;
 
     private final int ELEMENT_HIGHLIGHT_X = 256-ELEMENT_BUTTON_SIZE;
-    private final int ELEMENT_HIGHLIGHT_Y = 64;
+    private final int ELEMENT_HIGHLIGHT_Y = 70;
     Inventory inventory;
     public ElementScreen(ElementMenu menu, Inventory inventory, Component name) {
         super(menu,inventory,name);
