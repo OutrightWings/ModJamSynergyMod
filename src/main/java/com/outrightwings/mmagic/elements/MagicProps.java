@@ -1,5 +1,6 @@
 package com.outrightwings.mmagic.elements;
 
+import com.outrightwings.mmagic.Main;
 import com.outrightwings.mmagic.entity.MagicBall;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.stats.Stats;
@@ -20,8 +21,28 @@ public class MagicProps {
     PotionContents effects;
     float velocity =  .5f, inaccuracy = 0.1f, range = 10;
     int[] rawElements;
+    int[] elementCounts;
     public MagicProps(int form, int[] rawElements){
         this.rawElements = rawElements;
+        this.elementCounts = countElements();
+
+        String x = "";
+        for(int i : elementCounts)
+            x += i + " ";
+        Main.LOGGER.debug(x);
+
+    }
+    private int[] countElements(){
+        //Offset by 1 to not include type 0 which is none
+        int[] counts = new int[Elements.ElementType.values().length-1];
+        String x = "";
+        for(int i : rawElements){
+           x += i + " ";
+            if(i != 0)
+                counts[i-1]++;
+        }
+        Main.LOGGER.debug(x);
+        return counts;
     }
     public boolean cast(Player player, Level level, ItemStack itemStack){
 

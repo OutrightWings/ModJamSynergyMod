@@ -40,8 +40,8 @@ public class MagicBall extends ImprovedProjectileEntity {
         if(p != null){
             m.potion = new ThrownPotion(level,player);
             m.potionUUID = m.potion.getUUID();
-            m.potion.setInvisible(true);
             m.potion.setItem(p);
+            m.potion.setInvisible(true);
             m.potion.startRiding(m);
         }
         m.maxStuckTime = 0;

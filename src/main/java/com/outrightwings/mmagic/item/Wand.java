@@ -61,10 +61,8 @@ public class Wand extends Item implements ILeftClickReact {
             int form = itemStack.get(ModComponents.SELECTED_FORM_COMPONENT).id();
             int[] elements = itemStack.get(ModComponents.SELECTED_ELEMENTS_COMPONENT).elements();
             //Do things if elements
-            if(elements[0] != 0){
-                var props = new MagicProps(form, elements);
-                return props.cast(player,level,itemStack);
-            }
+            var props = new MagicProps(form, elements);
+            return props.cast(player,level,itemStack);
         }
         return false;
     }
