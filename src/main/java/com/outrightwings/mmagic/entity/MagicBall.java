@@ -23,10 +23,10 @@ import net.minecraft.world.phys.Vec3;
 import java.util.UUID;
 
 public class MagicBall extends ImprovedProjectileEntity {
-    //todo potion stays synced when world is saved
     private UUID potionUUID; // Store the UUID reference
     private ThrownPotion potion; // Cached reference (not saved)
-
+    private int damage, fireticks;
+    private float knockback;
 
     public MagicBall(EntityType<MagicBall> type, Level level) {
         super(type, level);
@@ -41,16 +41,19 @@ public class MagicBall extends ImprovedProjectileEntity {
             m.potion = new ThrownPotion(level,player);
             m.potionUUID = m.potion.getUUID();
             m.potion.setItem(p);
-            m.potion.setInvisible(true);
             m.potion.startRiding(m);
+
         }
+        m.setInvisible(true);
         m.maxStuckTime = 0;
         return m;
     }
     public void placeInWorld(Level level){
         level.addFreshEntity(this);
-        if(potion != null)
+        if(potion != null) {
             level.addFreshEntity(potion);
+            potion.setInvisible(true);
+        }
     }
     @Override
     public void reachedEndOfLife(){
@@ -63,7 +66,7 @@ public class MagicBall extends ImprovedProjectileEntity {
     }
     @Override
     protected Item getDefaultItem() {
-        return Items.STONE;
+        return Items.AIR;
     }
     public void spawnTrailParticles(){
         // Projectile particle code
@@ -110,18 +113,23 @@ public class MagicBall extends ImprovedProjectileEntity {
     @Override
     public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
-
         if (potionUUID != null) {
-            nbt.putUUID("PotionUUID", potionUUID);
+            nbt.putUUID("potionUUID", potionUUID);
         }
+        nbt.putInt("fireTicks",fireticks);
+        nbt.putInt("damage",damage);
+        nbt.putFloat("knockback",knockback);
     }
     @Override
     public void readAdditionalSaveData(CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
 
-        if (nbt.hasUUID("PotionUUID")) {
-            potionUUID = nbt.getUUID("PotionUUID");
+        if (nbt.hasUUID("potionUUID")) {
+            potionUUID = nbt.getUUID("potionUUID");
         }
+        fireticks = nbt.getInt("fireTicks");
+        damage = nbt.getInt("damage");
+        knockback = nbt.getFloat("knockback");
     }
     private ThrownPotion getPotionEntity() {
         if (potion == null && potionUUID != null) {
