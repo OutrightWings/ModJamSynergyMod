@@ -11,6 +11,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 @OnlyIn(Dist.CLIENT)
 public class ElementScreen extends AbstractContainerScreen<ElementMenu> {
@@ -90,6 +91,8 @@ public class ElementScreen extends AbstractContainerScreen<ElementMenu> {
                 break;
             }
         }
-        wand.set(ModComponents.SELECTED_ELEMENTS_COMPONENT,new SelectedElementsComponent.SelectedElements(list));
+        var elementComp = new SelectedElementsComponent.SelectedElements(list);
+        wand.set(ModComponents.SELECTED_ELEMENTS_COMPONENT, elementComp);
+        PacketDistributor.sendToServer(elementComp);
     }
 }

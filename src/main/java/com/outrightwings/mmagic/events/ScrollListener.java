@@ -7,6 +7,7 @@ import com.outrightwings.mmagic.item.components.SelectedFormComponent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 public class ScrollListener {
     public static boolean onScroll(double delta){
@@ -24,7 +25,9 @@ public class ScrollListener {
                     form += ((int)delta);
                     form = form >= Elements.CastingForms.values().length ? 0 : form;
                     form = form < 0 ? Elements.CastingForms.values().length-1 : form;
-                    item.set(ModComponents.SELECTED_FORM_COMPONENT, new SelectedFormComponent.SelectedForm(form));
+                    var formComp = new SelectedFormComponent.SelectedForm(form);
+                    item.set(ModComponents.SELECTED_FORM_COMPONENT, formComp);
+                    PacketDistributor.sendToServer(formComp);
                 }
             }
         }

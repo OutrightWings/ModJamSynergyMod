@@ -6,6 +6,7 @@ import com.outrightwings.mmagic.events.ClientModEvents;
 import com.outrightwings.mmagic.item.components.ModComponents;
 import com.outrightwings.mmagic.item.ModItems;
 import com.outrightwings.mmagic.ui.ModMenus;
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import org.slf4j.Logger;
@@ -32,7 +33,7 @@ public class Main
         ModItems.CREATIVE_MODE_TABS.register(modEventBus);
         ModEntities.ENTITIES.register(modEventBus);
         modEventBus.register(ClientModEvents.class);
-
+        modEventBus.register(ModComponents.class);
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
