@@ -2,6 +2,8 @@ package com.outrightwings.mmagic.elements;
 
 import com.outrightwings.mmagic.entity.MagicBall;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -32,7 +34,7 @@ public class MagicProps {
     public int damage = 0;
     public float knockback = 0;
     public boolean gravity = true;
-
+    public ParticleOptions particle = ParticleTypes.BUBBLE;
     public MagicProps(int form, int[] rawElements){
         this.rawElements = rawElements;
         this.elementCounts = countElements();

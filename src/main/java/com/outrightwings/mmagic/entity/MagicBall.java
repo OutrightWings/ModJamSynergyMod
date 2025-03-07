@@ -1,10 +1,12 @@
 package com.outrightwings.mmagic.entity;
 
-import com.outrightwings.mmagic.Main;
 import com.outrightwings.mmagic.elements.MagicProps;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -12,27 +14,26 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.LingeringPotionItem;
-import net.minecraft.world.item.alchemy.PotionContents;
-import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
 
 import java.util.UUID;
 
-public class MagicBall extends ImprovedProjectileEntity {
+public class MagicBall extends ImprovedProjectileEntity implements IEntityWithComplexSpawn {
     private UUID potionUUID; // Store the UUID reference
     private ThrownPotion potion; // Cached reference (not saved)
     private int damage, fireticks, freezeticks;
     private float knockback;
+    public ParticleOptions particle = ParticleTypes.ANGRY_VILLAGER;
 
     public MagicBall(EntityType<MagicBall> type, Level level) {
         super(type, level);
+        particle = ParticleTypes.ANGRY_VILLAGER;
     }
     //I cant get multi constructors to work for some ungodly reason so we are doing this now
     public static MagicBall spawnAtPlayer(Player player, Level level, MagicProps props){
@@ -46,18 +47,28 @@ public class MagicBall extends ImprovedProjectileEntity {
         m.fireticks = props.fireTicks;
         m.freezeticks = props.freezeTicks;
         m.setNoGravity(!props.gravity);
-
+        m.particle = props.particle;
         if(props.potion != null){
             m.potion = new ThrownPotion(level,player);
             m.potionUUID = m.potion.getUUID();
             m.potion.setItem(props.potion);
             m.potion.startRiding(m);
-
         }
         m.setInvisible(true);
         m.maxStuckTime = 0;
         return m;
     }
+    @Override
+    public void writeSpawnData(RegistryFriendlyByteBuf buf) {
+        buf.writeVarInt(BuiltInRegistries.PARTICLE_TYPE.getId(particle.getType()));
+    }
+
+    @Override
+    public void readSpawnData(RegistryFriendlyByteBuf buf) {
+        int particleId = buf.readVarInt();
+        this.particle = (ParticleOptions) BuiltInRegistries.PARTICLE_TYPE.byId(particleId);
+    }
+
     public void placeInWorld(Level level){
         level.addFreshEntity(this);
         if(potion != null) {
@@ -83,7 +94,7 @@ public class MagicBall extends ImprovedProjectileEntity {
         double velZ = movement.z;
         //for (int j = 0; j < 4; ++j) {
             double pY = this.getEyeY();
-            level().addParticle(ParticleTypes.FLAME,
+            level().addParticle(particle,
                     getX() - velX * 0.25D, pY - velY * 0.25D, getZ() - velZ * 0.25D,
                     0, 0, 0);
         //}
