@@ -54,7 +54,7 @@ public class ElementScreen extends AbstractContainerScreen<ElementMenu> {
 
         //Loop through selected on wand
         ItemStack wand = inventory.getItem(inventory.selected);
-        SelectedElementsComponent.SelectedElements selectedElements = wand.get(ModComponents.SELECTED_ELEMENTS_COMPONENT);
+        SelectedElementsComponent selectedElements = wand.get(ModComponents.SELECTED_ELEMENTS_COMPONENT);
         int[] list = selectedElements.elements();
         for(int i = 0; i < list.length; i++){
             if(list[i] != 0){
@@ -83,7 +83,7 @@ public class ElementScreen extends AbstractContainerScreen<ElementMenu> {
     }
     private void addElement(int id){
         ItemStack wand = inventory.getItem(inventory.selected);
-        SelectedElementsComponent.SelectedElements selectedElements = wand.get(ModComponents.SELECTED_ELEMENTS_COMPONENT);
+        SelectedElementsComponent selectedElements = wand.get(ModComponents.SELECTED_ELEMENTS_COMPONENT);
         int[] list = selectedElements.elements();
         for(int i = 0; i < list.length; i++){
             if(list[i] == 0){
@@ -91,7 +91,7 @@ public class ElementScreen extends AbstractContainerScreen<ElementMenu> {
                 break;
             }
         }
-        var elementComp = new SelectedElementsComponent.SelectedElements(list);
+        var elementComp = new SelectedElementsComponent(list);
         wand.set(ModComponents.SELECTED_ELEMENTS_COMPONENT, elementComp);
         PacketDistributor.sendToServer(elementComp);
     }

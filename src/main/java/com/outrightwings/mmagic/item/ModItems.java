@@ -19,8 +19,8 @@ public class ModItems {
 
     public static final DeferredItem<Item> WAND = ITEMS.register("wand",()->new Wand(new Item.Properties()
             .stacksTo(1)
-            .component(ModComponents.SELECTED_ELEMENTS_COMPONENT.value(),new SelectedElementsComponent.SelectedElements(new int[Elements.MAX_SELECTED]))
-            .component(ModComponents.SELECTED_FORM_COMPONENT.value(),new SelectedFormComponent.SelectedForm(0))
+            .component(ModComponents.SELECTED_ELEMENTS_COMPONENT.value(),new SelectedElementsComponent(new int[Elements.MAX_SELECTED]))
+            .component(ModComponents.SELECTED_FORM_COMPONENT.value(),new SelectedFormComponent(0))
     ));
     //public static final DeferredItem<BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.registerSimpleBlockItem("example_block", EXAMPLE_BLOCK);
     //public static final DeferredItem<Item> EXAMPLE_ITEM = ITEMS.registerSimpleItem("example_item", new Item.Properties().food(new FoodProperties.Builder().alwaysEdible().nutrition(1).saturationModifier(2f).build()));

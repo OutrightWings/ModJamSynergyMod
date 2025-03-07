@@ -25,7 +25,7 @@ public class ScrollListener {
                     form += ((int)delta);
                     form = form >= Elements.CastingForms.values().length ? 0 : form;
                     form = form < 0 ? Elements.CastingForms.values().length-1 : form;
-                    var formComp = new SelectedFormComponent.SelectedForm(form);
+                    var formComp = new SelectedFormComponent(form);
                     item.set(ModComponents.SELECTED_FORM_COMPONENT, formComp);
                     PacketDistributor.sendToServer(formComp);
                 }

@@ -12,26 +12,26 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public class SelectedFormComponent {
-    public record SelectedForm(int id) implements CustomPacketPayload{
-        public static final CustomPacketPayload.Type<SelectedFormComponent.SelectedForm> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Main.MODID, "selected_form_packet"));
-        @Override
-        public Type<? extends CustomPacketPayload> type() {
-            return TYPE;
-        }
+public record SelectedFormComponent(int id) implements CustomPacketPayload{
+
+    public static final CustomPacketPayload.Type<SelectedFormComponent> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Main.MODID, "selected_form_packet"));
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 
-    public static final Codec<SelectedForm> CODEC = RecordCodecBuilder.create(instance ->
+
+    public static final Codec<SelectedFormComponent> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
-                    Codec.INT.fieldOf("id").forGetter(SelectedForm::id)
-            ).apply(instance, SelectedForm::new)
+                    Codec.INT.fieldOf("id").forGetter(SelectedFormComponent::id)
+            ).apply(instance, SelectedFormComponent::new)
     );
-    public static final StreamCodec<ByteBuf, SelectedForm> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.INT, SelectedForm::id,
-            SelectedForm::new
+    public static final StreamCodec<ByteBuf, SelectedFormComponent> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.INT, SelectedFormComponent::id,
+            SelectedFormComponent::new
     );
 
-    public static void handleDataOnMain(final SelectedFormComponent.SelectedForm data, final IPayloadContext context) {
+    public static void handleDataOnMain(final SelectedFormComponent data, final IPayloadContext context) {
         Player player = context.player();
 
         ItemStack stack = player.getMainHandItem();

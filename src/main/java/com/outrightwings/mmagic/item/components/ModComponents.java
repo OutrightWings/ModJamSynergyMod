@@ -12,13 +12,13 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public class ModComponents {
     public static final DeferredRegister.DataComponents COMPONENTS = DeferredRegister.createDataComponents(Main.MODID);
 
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<SelectedElementsComponent.SelectedElements>> SELECTED_ELEMENTS_COMPONENT = COMPONENTS.registerComponentType(
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<SelectedElementsComponent>> SELECTED_ELEMENTS_COMPONENT = COMPONENTS.registerComponentType(
             "elements",
             builder -> builder
                     .persistent(SelectedElementsComponent.CODEC)
                     .networkSynchronized(SelectedElementsComponent.STREAM_CODEC)
     );
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<SelectedFormComponent.SelectedForm>> SELECTED_FORM_COMPONENT = COMPONENTS.registerComponentType(
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<SelectedFormComponent>> SELECTED_FORM_COMPONENT = COMPONENTS.registerComponentType(
             "form",
             builder -> builder
                     .persistent(SelectedFormComponent.CODEC)
@@ -29,7 +29,7 @@ public class ModComponents {
     public static void register(final RegisterPayloadHandlersEvent event) {
         final PayloadRegistrar registrar = event.registrar("1");
         registrar.playBidirectional(
-                SelectedElementsComponent.SelectedElements.TYPE,
+                SelectedElementsComponent.TYPE,
                 SelectedElementsComponent.STREAM_CODEC,
                 new DirectionalPayloadHandler<>(
                         SelectedElementsComponent::handleDataOnMain,
@@ -37,7 +37,7 @@ public class ModComponents {
                 )
         );
         registrar.playBidirectional(
-                SelectedFormComponent.SelectedForm.TYPE,
+                SelectedFormComponent.TYPE,
                 SelectedFormComponent.STREAM_CODEC,
                 new DirectionalPayloadHandler<>(
                         SelectedFormComponent::handleDataOnMain,

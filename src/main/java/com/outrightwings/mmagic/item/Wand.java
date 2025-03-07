@@ -46,7 +46,7 @@ public class Wand extends Item implements ILeftClickReact {
         return InteractionResultHolder.sidedSuccess(player.getItemInHand(hand),level.isClientSide);
     }
     public void clearElements(ItemStack item){
-        item.set(ModComponents.SELECTED_ELEMENTS_COMPONENT,new SelectedElementsComponent.SelectedElements(new int[Elements.MAX_SELECTED]));
+        item.set(ModComponents.SELECTED_ELEMENTS_COMPONENT,new SelectedElementsComponent(new int[Elements.MAX_SELECTED]));
     }
     @Override
     public boolean canAttackBlock(BlockState pState, Level level, BlockPos pPos, Player player) {
