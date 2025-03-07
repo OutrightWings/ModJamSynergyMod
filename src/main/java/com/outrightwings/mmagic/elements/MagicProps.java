@@ -1,16 +1,13 @@
 package com.outrightwings.mmagic.elements;
 
 import com.outrightwings.mmagic.entity.MagicBall;
-import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.stats.Stats;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
@@ -21,18 +18,20 @@ import java.util.Optional;
 import java.util.Random;
 
 public class MagicProps {
+    int minPotionTime = 20*3;
+    int minFireFreezeTime = 20;
     Elements.CastingForms castingForm;
     Elements.AttackForms attackForm;
     int[] rawElements;
     int[] elementCounts;
     //Things that need to go on the MagicBall
-    PotionContents potionEffects = null;
-    int fireTicks = 0, freezeTicks = 0;
+    public ItemStack potion = null;
+    public int fireTicks = 0, freezeTicks = 0;
     float velocity =  .5f, inaccuracy = 0.1f;
-    int lifetime = 10;
-    int damage = 0;
-    float knockback = 0;
-
+    public int lifetime = 10;
+    public int damage = 0;
+    public float knockback = 0;
+    public boolean gravity = true;
 
     public MagicProps(int form, int[] rawElements){
         this.rawElements = rawElements;
@@ -83,7 +82,7 @@ public class MagicProps {
                     if(counts[i] > 0) {
                         if (counts[lifeIndex] != 0) {
                             counts[lifeIndex]--;
-                            effects.add(new MobEffectInstance(MobEffects.WATER_BREATHING, counts[i] * 2));
+                            effects.add(new MobEffectInstance(MobEffects.WATER_BREATHING, counts[i] * minPotionTime));
                         } else {
                             knockback += counts[i] * 0.5f;
                         }
@@ -93,7 +92,7 @@ public class MagicProps {
                     if(counts[i] > 0) {
                         if (counts[lifeIndex] != 0) {
                             counts[lifeIndex]--;
-                            effects.add(new MobEffectInstance(MobEffects.WITHER, counts[i]));
+                            effects.add(new MobEffectInstance(MobEffects.WITHER, counts[i]*minPotionTime));
                         } else {
                             damage += counts[i];
                         }
@@ -103,7 +102,7 @@ public class MagicProps {
                     if(counts[i] > 0) {
                         if (counts[lifeIndex] != 0) {
                             counts[lifeIndex]--;
-                            effects.add(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, counts[i]));
+                            effects.add(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, counts[i]*minPotionTime));
                         } else {
                             damage += counts[i];
                             knockback += counts[i] * 0.2f;
@@ -112,10 +111,10 @@ public class MagicProps {
                     break;
                 case ICE:
                     if(counts[i] > 0) {
-                        effects.add(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, counts[i]));
-                        effects.add(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, counts[i] / 2));
+                        effects.add(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, counts[i]*minPotionTime));
+                        effects.add(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, counts[i] * minPotionTime));
                         if (counts[i] > 1) {
-                            freezeTicks = 2 * (counts[i] - 1);
+                            freezeTicks = minFireFreezeTime * (counts[i] - 1);
                         }
                     }
                     break;
@@ -123,9 +122,9 @@ public class MagicProps {
                     if(counts[i] > 0) {
                         if (counts[lifeIndex] != 0) {
                             counts[lifeIndex]--;
-                            effects.add(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, counts[i]));
+                            effects.add(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, counts[i] * minPotionTime));
                         } else {
-                            fireTicks = 2 * counts[i];
+                            fireTicks = minFireFreezeTime * counts[i];
                         }
                     }
                     break;
@@ -135,15 +134,10 @@ public class MagicProps {
         }
         //LIFE
         if(counts[lifeIndex] > 0) {
-            effects.add(new MobEffectInstance(MobEffects.REGENERATION, counts[lifeIndex]));
+            effects.add(new MobEffectInstance(MobEffects.REGENERATION, counts[lifeIndex]*minPotionTime));
         }
-
-        //Create potion out of effects
-        if(!effects.isEmpty()||counts[Elements.ElementType.WATER.ordinal()-1] > 0){
-            var p = new Potion(effects.toArray(MobEffectInstance[]::new));;
-            potionEffects = new PotionContents(Holder.direct(p));
-
-        }
+        if(!effects.isEmpty())
+            potion = createPotion(effects);
     }
     public boolean cast(Player player, Level level, ItemStack itemStack){
         switch(attackForm){
@@ -173,13 +167,14 @@ public class MagicProps {
         return true;
     }
     private void spawnBeam(Player player, Level level){
-        MagicBall m = MagicBall.spawnAtPlayer(player,level,createPotion());
+        this.gravity = false;
+        MagicBall m = MagicBall.spawnAtPlayer(player,level,this);
         m.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, velocity, inaccuracy);
-        m.setNoGravity(true);
-        m.setMaxAge(lifetime);
+
         m.placeInWorld(level);
     }
     private void spawnSpray(Player player, Level level){
+        this.gravity = false;
         Random random = new Random();
         int count = 15;
         float spread = 45;
@@ -187,26 +182,29 @@ public class MagicProps {
             float pitch = player.getXRot() + (random.nextFloat() * spread - spread/2);
             float yaw = player.getYRot() + (random.nextFloat() * spread - spread/2);
 
-            MagicBall m = MagicBall.spawnAtPlayer(player,level,createPotion());
+            MagicBall m = MagicBall.spawnAtPlayer(player,level,this);
             m.shootFromRotation(player, pitch, yaw, 0, velocity, inaccuracy);
-            m.setNoGravity(true);
-            m.setMaxAge(lifetime);
             m.placeInWorld(level);
         }
     }
     private void spawnBall(Player player, Level level){
-        MagicBall m = MagicBall.spawnAtPlayer(player,level, createPotion() );
+        this.gravity = true;
+        MagicBall m = MagicBall.spawnAtPlayer(player,level, this);
         m.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, velocity, inaccuracy);
-        m.setMaxAge(lifetime);
         m.placeInWorld(level);
     }
 
-    private ItemStack createPotion(){
-        if(potionEffects != null) {
-            var item = Items.SPLASH_POTION.getDefaultInstance();
-            item.set(DataComponents.POTION_CONTENTS, potionEffects);
-            return item;
-        }
-        return null;
+
+    private ItemStack createPotion(List<MobEffectInstance> effects) {
+        var item = Items.SPLASH_POTION;
+
+        // Create potion contents directly with effects (without using an unregistered Potion instance)
+        var contents = new PotionContents(Optional.of(Potions.WATER), Optional.empty(), effects);
+
+        // Create the potion item stack and set its potion contents
+        var stack = new ItemStack(item);
+        stack.set(DataComponents.POTION_CONTENTS, contents);
+
+        return stack;
     }
 }
