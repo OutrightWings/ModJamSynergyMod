@@ -20,11 +20,19 @@ public class ModEntities {
             MobCategory.MISC
         )
             .updateInterval(10)
-            .sized(0.25F, 0.25F)
+            .sized(0.15F, 0.15F)
             .clientTrackingRange(4)
             .build("magic_ball")
     );
 
-
+    public static final Supplier<EntityType<InvisiblePotion>> INVISIBLE_POTION = ENTITIES.register("invisible_potion",()-> EntityType.Builder.of(
+                    InvisiblePotion::new,
+                            MobCategory.MISC
+                    )
+                    .updateInterval(10)
+                    .sized(0.1F, 0.1F)
+                    .clientTrackingRange(4)
+                    .build("invisible_potion")
+    );
 
 }

@@ -1,5 +1,6 @@
 package com.outrightwings.mmagic.elements;
 
+import com.outrightwings.mmagic.Main;
 import com.outrightwings.mmagic.entity.MagicBall;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleOptions;
@@ -26,6 +27,7 @@ public class MagicProps {
     Elements.AttackForms attackForm;
     int[] rawElements;
     int[] elementCounts;
+    boolean wet = false;
     //Things that need to go on the MagicBall
     public ItemStack potion = null;
     public int fireTicks = 0, freezeTicks = 0;
@@ -60,6 +62,7 @@ public class MagicProps {
         if(a != -1 && b == -1){
             b = a;
         }
+        this.particle = Elements.getParticle(a,b);
         return Elements.getAttackForm(a,b);
     }
     private int[] countElements(){
@@ -87,6 +90,7 @@ public class MagicProps {
                             effects.add(new MobEffectInstance(MobEffects.WATER_BREATHING, counts[i] * minPotionTime));
                         } else {
                             knockback += counts[i] * 0.5f;
+                            wet = true;
                         }
                     }
                     break;
@@ -138,7 +142,7 @@ public class MagicProps {
         if(counts[lifeIndex] > 0) {
             effects.add(new MobEffectInstance(MobEffects.REGENERATION, counts[lifeIndex]*minPotionTime));
         }
-        if(!effects.isEmpty())
+        if(!effects.isEmpty() || wet)
             potion = createPotion(effects);
     }
     public boolean cast(Player player, Level level, ItemStack itemStack){
@@ -176,7 +180,7 @@ public class MagicProps {
         m.placeInWorld(level);
     }
     private void spawnSpray(Player player, Level level){
-        this.gravity = false;
+        this.gravity = true;
         Random random = new Random();
         int count = 15;
         float spread = 45;
@@ -196,17 +200,12 @@ public class MagicProps {
         m.placeInWorld(level);
     }
 
-
     private ItemStack createPotion(List<MobEffectInstance> effects) {
         var item = Items.SPLASH_POTION;
-
-        // Create potion contents directly with effects (without using an unregistered Potion instance)
-        var contents = new PotionContents(Optional.of(Potions.WATER), Optional.empty(), effects);
-
-        // Create the potion item stack and set its potion contents
+        var p = wet ? Potions.WATER : Potions.AWKWARD;
+        var contents = new PotionContents(Optional.of(p), Optional.empty(), effects);
         var stack = new ItemStack(item);
         stack.set(DataComponents.POTION_CONTENTS, contents);
-
         return stack;
     }
 }

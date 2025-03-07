@@ -25,17 +25,16 @@ import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
 import java.util.UUID;
 
 public class MagicBall extends ImprovedProjectileEntity implements IEntityWithComplexSpawn {
-    private UUID potionUUID; // Store the UUID reference
-    private ThrownPotion potion; // Cached reference (not saved)
+    private UUID potionUUID;
+    private ThrownPotion potion;
     private int damage, fireticks, freezeticks;
     private float knockback;
     public ParticleOptions particle = ParticleTypes.ANGRY_VILLAGER;
 
     public MagicBall(EntityType<MagicBall> type, Level level) {
         super(type, level);
-        particle = ParticleTypes.ANGRY_VILLAGER;
     }
-    //I cant get multi constructors to work for some ungodly reason so we are doing this now
+    //I cant get multi constructors to work for some ungodly reason, so we are doing this now
     public static MagicBall spawnAtPlayer(Player player, Level level, MagicProps props){
         MagicBall m = new MagicBall(ModEntities.MAGIC_BALL.get(), level);
         Vec3 pos = player.getEyePosition();//.add(player.getLookAngle().scale(.5)).add(0,-0.5,0);
@@ -49,12 +48,11 @@ public class MagicBall extends ImprovedProjectileEntity implements IEntityWithCo
         m.setNoGravity(!props.gravity);
         m.particle = props.particle;
         if(props.potion != null){
-            m.potion = new ThrownPotion(level,player);
+            m.potion = InvisiblePotion.getNewPotion(player,level);
             m.potionUUID = m.potion.getUUID();
             m.potion.setItem(props.potion);
             m.potion.startRiding(m);
         }
-        m.setInvisible(true);
         m.maxStuckTime = 0;
         return m;
     }
