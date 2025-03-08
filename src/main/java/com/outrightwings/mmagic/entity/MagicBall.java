@@ -1,6 +1,8 @@
 package com.outrightwings.mmagic.entity;
 
+import com.outrightwings.mmagic.Main;
 import com.outrightwings.mmagic.elements.MagicProps;
+import com.outrightwings.mmagic.tags.ModTags;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -8,6 +10,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -16,6 +19,8 @@ import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -27,8 +32,10 @@ import java.util.UUID;
 public class MagicBall extends ImprovedProjectileEntity implements IEntityWithComplexSpawn {
     private UUID potionUUID;
     private ThrownPotion potion;
-    private int damage, fireticks, freezeticks;
+    private int damage, fireTicks, freezeTicks;
     private float knockback;
+    private boolean isWet, isDeath;
+
     public ParticleOptions particle = ParticleTypes.ANGRY_VILLAGER;
 
     public MagicBall(EntityType<MagicBall> type, Level level) {
@@ -43,10 +50,12 @@ public class MagicBall extends ImprovedProjectileEntity implements IEntityWithCo
         m.damage = props.damage;
         m.maxAge = props.lifetime;
         m.knockback = props.knockback;
-        m.fireticks = props.fireTicks;
-        m.freezeticks = props.freezeTicks;
+        m.fireTicks = props.fireTicks;
+        m.freezeTicks = props.freezeTicks;
         m.setNoGravity(!props.gravity);
         m.particle = props.particle;
+        m.isWet = props.isWet;
+        m.isDeath = props.isDeath;
         if(props.potion != null){
             m.potion = InvisiblePotion.getNewPotion(player,level);
             m.potionUUID = m.potion.getUUID();
@@ -112,15 +121,15 @@ public class MagicBall extends ImprovedProjectileEntity implements IEntityWithCo
             }
 
             // Apply fire ticks if greater than 0
-            if (fireticks > 0) {
-                entity.setRemainingFireTicks(fireticks);
+            if (fireTicks > 0) {
+                entity.setRemainingFireTicks(fireTicks);
                 entity.setSharedFlagOnFire(true);
             }
 
             // Apply freeze ticks if greater than 0
-            if (freezeticks > 0 && entity instanceof LivingEntity livingEntity) {
+            if (freezeTicks > 0 && entity instanceof LivingEntity livingEntity) {
                 livingEntity.setIsInPowderSnow(true);
-                livingEntity.setTicksFrozen(livingEntity.getTicksRequiredToFreeze()+freezeticks*10);
+                livingEntity.setTicksFrozen(livingEntity.getTicksRequiredToFreeze()+ freezeTicks *10);
             }
 
             // Apply knockback
@@ -142,12 +151,24 @@ public class MagicBall extends ImprovedProjectileEntity implements IEntityWithCo
     }
     @Override
     protected void onHitBlock(BlockHitResult result) {
-        if (!this.level().isClientSide) {
+        super.onHitBlock(result);
+        Level level = this.level();
+        if (!level.isClientSide) {
             if(potion != null){
                 this.potion.onHitBlock(result);
             }
+            BlockState state = level.getBlockState(result.getBlockPos());
+            if(isDeath && state.is(ModTags.DEATH_KILLABLE)){
+                level.setBlockAndUpdate(result.getBlockPos(), Blocks.AIR.defaultBlockState());
+            }
+            if(isDeath && state.is(ModTags.DEATH_DIRTABLE)){
+                level.setBlockAndUpdate(result.getBlockPos(), Blocks.DIRT.defaultBlockState());
+            }
+
+            if ((this.isWet && state.is(BlockTags.CONVERTABLE_TO_MUD)) || (isDeath && isWet && state.is(ModTags.DEATH_DIRTABLE))){
+                level.setBlockAndUpdate(result.getBlockPos(), Blocks.MUD.defaultBlockState());
+            }
         }
-        super.onHitBlock(result);
     }
     @Override
     public void tick(){
@@ -161,10 +182,12 @@ public class MagicBall extends ImprovedProjectileEntity implements IEntityWithCo
         if (potionUUID != null) {
             nbt.putUUID("potionUUID", potionUUID);
         }
-        nbt.putInt("fireTicks",fireticks);
+        nbt.putInt("fireTicks", fireTicks);
         nbt.putInt("damage",damage);
         nbt.putFloat("knockback",knockback);
-        nbt.putInt("freezeTicks",freezeticks);
+        nbt.putInt("freezeTicks", freezeTicks);
+        nbt.putBoolean("wet",isWet);
+        nbt.putBoolean("death",isDeath);
     }
     @Override
     public void readAdditionalSaveData(CompoundTag nbt) {
@@ -173,10 +196,12 @@ public class MagicBall extends ImprovedProjectileEntity implements IEntityWithCo
         if (nbt.hasUUID("potionUUID")) {
             potionUUID = nbt.getUUID("potionUUID");
         }
-        fireticks = nbt.getInt("fireTicks");
+        fireTicks = nbt.getInt("fireTicks");
         damage = nbt.getInt("damage");
         knockback = nbt.getFloat("knockback");
-        freezeticks = nbt.getInt("freezeTicks");
+        freezeTicks = nbt.getInt("freezeTicks");
+        isWet = nbt.getBoolean("wet");
+        isDeath = nbt.getBoolean("death");
     }
     private ThrownPotion getPotionEntity() {
         if (potion == null && potionUUID != null) {

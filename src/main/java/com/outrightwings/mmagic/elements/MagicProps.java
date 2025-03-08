@@ -1,6 +1,5 @@
 package com.outrightwings.mmagic.elements;
 
-import com.outrightwings.mmagic.Main;
 import com.outrightwings.mmagic.entity.MagicBall;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleOptions;
@@ -27,8 +26,9 @@ public class MagicProps {
     Elements.AttackForms attackForm;
     int[] rawElements;
     int[] elementCounts;
-    boolean wet = false;
-    //Things that need to go on the MagicBall
+
+
+    //Server side props
     public ItemStack potion = null;
     public int fireTicks = 0, freezeTicks = 0;
     float velocity =  .5f, inaccuracy = 0.1f;
@@ -36,7 +36,12 @@ public class MagicProps {
     public int damage = 0;
     public float knockback = 0;
     public boolean gravity = true;
+    public boolean isWet = false, isDeath = false;
+    //Client side props
     public ParticleOptions particle = ParticleTypes.BUBBLE;
+
+
+
     public MagicProps(int form, int[] rawElements){
         this.rawElements = rawElements;
         this.elementCounts = countElements(rawElements);
@@ -90,7 +95,7 @@ public class MagicProps {
                             effects.add(new MobEffectInstance(MobEffects.WATER_BREATHING, counts[i] * minPotionTime));
                         } else {
                             knockback += counts[i] * 0.5f;
-                            wet = true;
+                            isWet = true;
                         }
                     }
                     break;
@@ -101,6 +106,7 @@ public class MagicProps {
                             effects.add(new MobEffectInstance(MobEffects.WITHER, counts[i]*minPotionTime));
                         } else {
                             damage += counts[i];
+                            isDeath = true;
                         }
                     }
                     break;
@@ -142,7 +148,7 @@ public class MagicProps {
         if(counts[lifeIndex] > 0) {
             effects.add(new MobEffectInstance(MobEffects.REGENERATION, counts[lifeIndex]*minPotionTime));
         }
-        if(!effects.isEmpty() || wet)
+        if(!effects.isEmpty() || isWet)
             potion = createPotion(effects);
     }
     public boolean cast(Player player, Level level, ItemStack itemStack){
@@ -202,7 +208,7 @@ public class MagicProps {
 
     private ItemStack createPotion(List<MobEffectInstance> effects) {
         var item = Items.SPLASH_POTION;
-        var p = wet ? Potions.WATER : Potions.AWKWARD;
+        var p = isWet ? Potions.WATER : Potions.AWKWARD;
         var contents = new PotionContents(Optional.of(p), Optional.empty(), effects);
         var stack = new ItemStack(item);
         stack.set(DataComponents.POTION_CONTENTS, contents);

@@ -68,7 +68,7 @@ public class Elements {
             Map.entry(new Point(0,2),ParticleTypes.WHITE_ASH),
             Map.entry(new Point(0,3),ParticleTypes.FLAME),
             Map.entry(new Point(0,4),ParticleTypes.FLAME),
-            Map.entry(new Point(0,5),ParticleTypes.FLAME),
+            Map.entry(new Point(0,5),ParticleTypes.CLOUD),
 
             Map.entry(new Point(1,1),ParticleTypes.SNOWFLAKE),
             Map.entry(new Point(1,2),ParticleTypes.SNOWFLAKE),
