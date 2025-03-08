@@ -34,7 +34,7 @@ public class MagicBall extends ImprovedProjectileEntity implements IEntityWithCo
     private ThrownPotion potion;
     private int damage, fireTicks, freezeTicks;
     private float knockback;
-    private boolean isWet, isDeath;
+    private boolean isWet, isDeath, isCold;
 
     public ParticleOptions particle = ParticleTypes.ANGRY_VILLAGER;
 
@@ -56,6 +56,7 @@ public class MagicBall extends ImprovedProjectileEntity implements IEntityWithCo
         m.particle = props.particle;
         m.isWet = props.isWet;
         m.isDeath = props.isDeath;
+        m.isCold = props.isCold;;
         if(props.potion != null){
             m.potion = InvisiblePotion.getNewPotion(player,level);
             m.potionUUID = m.potion.getUUID();
@@ -160,6 +161,7 @@ public class MagicBall extends ImprovedProjectileEntity implements IEntityWithCo
             BlockState state = level.getBlockState(result.getBlockPos());
             if(isDeath && state.is(ModTags.DEATH_KILLABLE)){
                 level.setBlockAndUpdate(result.getBlockPos(), Blocks.AIR.defaultBlockState());
+                this.setDeltaMovement(Vec3.ZERO);
             }
             if(isDeath && state.is(ModTags.DEATH_DIRTABLE)){
                 level.setBlockAndUpdate(result.getBlockPos(), Blocks.DIRT.defaultBlockState());
@@ -182,7 +184,10 @@ public class MagicBall extends ImprovedProjectileEntity implements IEntityWithCo
             if(isDeath && state.is(ModTags.DEATH_KILLABLE)){
                 level.setBlockAndUpdate(this.blockPosition(), Blocks.AIR.defaultBlockState());
             }
-
+            if(isCold && state.is(Blocks.WATER)){
+                level.setBlockAndUpdate(this.blockPosition(), Blocks.FROSTED_ICE.defaultBlockState());
+                this.setDeltaMovement(Vec3.ZERO);
+            }
         }
         super.tick();
     }
@@ -198,6 +203,7 @@ public class MagicBall extends ImprovedProjectileEntity implements IEntityWithCo
         nbt.putInt("freezeTicks", freezeTicks);
         nbt.putBoolean("wet",isWet);
         nbt.putBoolean("death",isDeath);
+        nbt.putBoolean("cold",isCold);
     }
     @Override
     public void readAdditionalSaveData(CompoundTag nbt) {
@@ -212,6 +218,7 @@ public class MagicBall extends ImprovedProjectileEntity implements IEntityWithCo
         freezeTicks = nbt.getInt("freezeTicks");
         isWet = nbt.getBoolean("wet");
         isDeath = nbt.getBoolean("death");
+        isCold = nbt.getBoolean("cold");
     }
     private ThrownPotion getPotionEntity() {
         if (potion == null && potionUUID != null) {

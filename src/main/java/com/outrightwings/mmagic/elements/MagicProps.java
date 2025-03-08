@@ -36,7 +36,7 @@ public class MagicProps {
     public int damage = 0;
     public float knockback = 0;
     public boolean gravity = true;
-    public boolean isWet = false, isDeath = false;
+    public boolean isWet = false, isDeath = false, isCold = false;
     //Client side props
     public ParticleOptions particle = ParticleTypes.BUBBLE;
 
@@ -123,6 +123,7 @@ public class MagicProps {
                     break;
                 case ICE:
                     if(counts[i] > 0) {
+                        isCold = true;
                         effects.add(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, counts[i]*minPotionTime));
                         effects.add(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, counts[i] * minPotionTime));
                         if (counts[i] > 1) {
