@@ -1,0 +1,17 @@
+{
+  "item.auric_arcanum.blue_wand": "Lapis Staff",
+  "item.auric_arcanum.red_wand": "Redstone Staff",
+  "item.auric_arcanum.green_wand": "Emerald Staff",
+  "item.auric_arcanum.purple_wand": "Amethyst Staff",
+  "item.auric_arcanum.white_wand": "Quartz Staff",
+  "item.auric_arcanum.light_blue_wand": "Diamond Staff",
+
+  "itemGroup.auric_arcanum": "Auric Arcanum",
+
+  "element.auric_arcanum.FIRE": "Fire",
+  "element.auric_arcanum.ICE": "Ice",
+  "element.auric_arcanum.ROCK": "Rock",
+  "element.auric_arcanum.LIFE": "Life",
+  "element.auric_arcanum.DEATH": "Death",
+  "element.auric_arcanum.WATER": "Water"
+}

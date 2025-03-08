@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "auric_arcanum:block/magic_stone_3"
+  }
+}
