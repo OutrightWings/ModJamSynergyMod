@@ -161,7 +161,7 @@ public class MagicProps {
                 break;
             case BEAM:
                 lifetime = 200;
-                velocity =  5f;
+                velocity =  1f;
                 inaccuracy = 0f;
                 spawnBeam(player,level);
                 break;

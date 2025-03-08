@@ -172,8 +172,18 @@ public class MagicBall extends ImprovedProjectileEntity implements IEntityWithCo
     }
     @Override
     public void tick(){
-        if(this.potion == null && potionUUID != null)
-            this.potion = getPotionEntity();
+        Level level = this.level();
+        if(!level.isClientSide){
+            if(this.potion == null && potionUUID != null)
+                this.potion = getPotionEntity();
+
+            //Kill plants we fly through
+            BlockState state = level.getBlockState(this.blockPosition());
+            if(isDeath && state.is(ModTags.DEATH_KILLABLE)){
+                level.setBlockAndUpdate(this.blockPosition(), Blocks.AIR.defaultBlockState());
+            }
+
+        }
         super.tick();
     }
     @Override
