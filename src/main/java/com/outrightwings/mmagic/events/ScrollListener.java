@@ -1,9 +1,9 @@
 package com.outrightwings.mmagic.events;
 
 import com.outrightwings.mmagic.elements.Elements;
-import com.outrightwings.mmagic.item.components.ModComponents;
-import com.outrightwings.mmagic.item.ModItems;
-import com.outrightwings.mmagic.item.components.SelectedFormComponent;
+import com.outrightwings.mmagic.item.Wand;
+import com.outrightwings.mmagic.network.components.ModComponents;
+import com.outrightwings.mmagic.network.components.SelectedFormComponent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -19,7 +19,7 @@ public class ScrollListener {
             if(player != null && player.isShiftKeyDown()){
                 ItemStack item = player.getMainHandItem();
                 //Check for wand Item
-                if(item.is(ModItems.WAND.get())){
+                if(item.getItem() instanceof Wand){
                     cancel = true;
                     int form = item.get(ModComponents.SELECTED_FORM_COMPONENT).id();
                     form += ((int)delta);

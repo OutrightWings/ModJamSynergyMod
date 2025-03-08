@@ -3,37 +3,40 @@ package com.outrightwings.mmagic.item;
 import com.outrightwings.mmagic.Main;
 import com.outrightwings.mmagic.elements.Elements;
 import com.outrightwings.mmagic.elements.MagicProps;
-import com.outrightwings.mmagic.entity.MagicBall;
-import com.outrightwings.mmagic.entity.ModEntities;
-import com.outrightwings.mmagic.item.components.ModComponents;
-import com.outrightwings.mmagic.item.components.SelectedElementsComponent;
-import com.outrightwings.mmagic.item.components.SelectedFormComponent;
+import com.outrightwings.mmagic.network.components.ModComponents;
+import com.outrightwings.mmagic.network.components.SelectedElementsComponent;
 import com.outrightwings.mmagic.ui.ElementMenu;
 import net.mehvahdjukaar.moonlight.api.item.ILeftClickReact;
-import net.minecraft.client.Minecraft;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Snowball;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.alchemy.PotionContents;
-import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-//todo add tooltips/tell player what they have selected
+
+import java.util.List;
+
 public class Wand extends Item implements ILeftClickReact {
     public Wand(Properties pProperties) {
         super(pProperties);
     }
-
+    @Override
+    public void appendHoverText(ItemStack item, Item.TooltipContext context, List<Component> list, TooltipFlag flag) {
+        SelectedElementsComponent elementsComponent = item.get(ModComponents.SELECTED_ELEMENTS_COMPONENT);
+        int[] counts = MagicProps.countElements(elementsComponent.elements());
+        for(int id = 0; id < counts.length; id++){
+            String name = Elements.ElementType.getTranslationKey(id+1);
+            if(counts[id] != 0)
+                list.add(Component.literal(String.format("%dx ",counts[id])).append(Component.translatable(name)).withStyle(ChatFormatting.GRAY));
+        }
+    }
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand){
         if(!level.isClientSide && player instanceof ServerPlayer serverPlayer){

@@ -1,0 +1,2 @@
+https://www.curseforge.com/minecraft/mc-mods/hextended-staves -- for the staff item model json. MIT LICENSE
+Voxxi -- for all the support and drawing me some lovely art and iterating on my own

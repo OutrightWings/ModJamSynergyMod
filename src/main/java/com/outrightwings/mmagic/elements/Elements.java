@@ -19,7 +19,10 @@ public class Elements {
         ROCK,
         LIFE,
         DEATH,
-        WATER
+        WATER;
+        public static String getTranslationKey(int id){
+            return "element.mmagic." + values()[id].name();
+        }
     }
     public enum AttackForms {
         NONE,
@@ -56,6 +59,7 @@ public class Elements {
             Map.entry(new Point(4,5),AttackForms.SPRAY),
 
             Map.entry(new Point(5,5),AttackForms.SPRAY)
+
     );
     private static final Map<Point, ParticleOptions> PARTICLE_MAP = Map.ofEntries(
             //Position is both element ids

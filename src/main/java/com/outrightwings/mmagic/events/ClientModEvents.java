@@ -3,7 +3,6 @@ package com.outrightwings.mmagic.events;
 import com.outrightwings.mmagic.Main;
 import com.outrightwings.mmagic.entity.InvisiblePotionRenderer;
 import com.outrightwings.mmagic.entity.ModEntities;
-import com.outrightwings.mmagic.item.components.SelectedFormComponent;
 import com.outrightwings.mmagic.ui.ElementScreen;
 import com.outrightwings.mmagic.ui.ModMenus;
 import net.minecraft.client.renderer.entity.EntityRenderers;

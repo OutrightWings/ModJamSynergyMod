@@ -1,4 +1,17 @@
 {
-  "item.mmagic.wand": "Wand",
-  "itemGroup.mmagic": "MMagic"
+  "item.mmagic.blue_wand": "Lapis Staff",
+  "item.mmagic.red_wand": "Redstone Staff",
+  "item.mmagic.green_wand": "Emerald Staff",
+  "item.mmagic.purple_wand": "Amethyst Staff",
+  "item.mmagic.white_wand": "Quartz Staff",
+  "item.mmagic.light_blue_wand": "Diamond Staff",
+
+  "itemGroup.mmagic": "MMagic",
+
+  "element.mmagic.FIRE": "Fire",
+  "element.mmagic.ICE": "Ice",
+  "element.mmagic.ROCK": "Rock",
+  "element.mmagic.LIFE": "Life",
+  "element.mmagic.DEATH": "Death",
+  "element.mmagic.WATER": "Water"
 }

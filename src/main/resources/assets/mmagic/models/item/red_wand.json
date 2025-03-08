@@ -1,0 +1,32 @@
+{
+  "loader": "neoforge:separate_transforms",
+  "parent": "minecraft:item/generated",
+  "base": {
+    "parent": "mmagic:item/staff",
+    "textures": {
+      "layer0": "mmagic:item/staff_large_red"
+    }
+  },
+  "perspectives":
+  {
+    "gui": {
+      "parent": "minecraft:item/generated",
+      "textures": {
+        "layer0": "mmagic:item/staff_red"
+      }
+    },
+    "fixed": {
+      "parent": "minecraft:item/generated",
+      "textures": {
+        "layer0": "mmagic:item/staff_red"
+      }
+    }
+    ,
+    "ground": {
+      "parent": "minecraft:item/generated",
+      "textures": {
+        "layer0": "mmagic:item/staff_red"
+      }
+    }
+  } 
+}

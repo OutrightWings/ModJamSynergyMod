@@ -1,4 +1,4 @@
-package com.outrightwings.mmagic.item.components;
+package com.outrightwings.mmagic.network.components;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

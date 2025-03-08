@@ -1,8 +1,9 @@
 package com.outrightwings.mmagic.ui;
 
 import com.outrightwings.mmagic.Main;
-import com.outrightwings.mmagic.item.components.ModComponents;
-import com.outrightwings.mmagic.item.components.SelectedElementsComponent;
+import com.outrightwings.mmagic.elements.Elements;
+import com.outrightwings.mmagic.network.components.ModComponents;
+import com.outrightwings.mmagic.network.components.SelectedElementsComponent;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -48,6 +49,7 @@ public class ElementScreen extends AbstractContainerScreen<ElementMenu> {
             int cy = y+ELEMENT_BUTTON_CORNERS[i][1];
             if(inBounds(mouseX,mouseY,cx,cy,ELEMENT_BUTTON_SIZE)){
                 gui.blit(BG_LOCATION, cx, cy, ELEMENT_HIGHLIGHT_X, ELEMENT_HIGHLIGHT_Y, ELEMENT_BUTTON_SIZE, ELEMENT_BUTTON_SIZE);
+                gui.renderTooltip(this.font,Component.translatable(Elements.ElementType.getTranslationKey(i+1)),mouseX,mouseY);
                 break;
             }
         }

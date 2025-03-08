@@ -1,4 +1,4 @@
-package com.outrightwings.mmagic.item.components;
+package com.outrightwings.mmagic.network.components;
 
 import com.outrightwings.mmagic.Main;
 import net.minecraft.core.component.DataComponentType;

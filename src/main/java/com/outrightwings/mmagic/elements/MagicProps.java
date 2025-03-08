@@ -39,7 +39,7 @@ public class MagicProps {
     public ParticleOptions particle = ParticleTypes.BUBBLE;
     public MagicProps(int form, int[] rawElements){
         this.rawElements = rawElements;
-        this.elementCounts = countElements();
+        this.elementCounts = countElements(rawElements);
         this.castingForm = Elements.CastingForms.values()[form];
         //todo check casting form to choose a different kind of form here like a defensiveForm
         this.attackForm = getAttackForm();
@@ -65,7 +65,7 @@ public class MagicProps {
         this.particle = Elements.getParticle(a,b);
         return Elements.getAttackForm(a,b);
     }
-    private int[] countElements(){
+    public static int[] countElements(int[] rawElements){
         //Offset by 1 to not include type 0 which is none
         int[] counts = new int[Elements.ElementType.values().length-1];
 
