@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "mmagic:block/magic_stone_0"
+    },
+    "age=1": {
+      "model": "mmagic:block/magic_stone_1"
+    },
+    "age=2": {
+      "model": "mmagic:block/magic_stone_2"
+    },
+    "age=3": {
+      "model": "mmagic:block/magic_stone_3"
+    }
+  }
+}

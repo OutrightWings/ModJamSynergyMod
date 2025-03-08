@@ -6,9 +6,6 @@ import com.outrightwings.mmagic.events.ClientModEvents;
 import com.outrightwings.mmagic.item.components.ModComponents;
 import com.outrightwings.mmagic.item.ModItems;
 import com.outrightwings.mmagic.ui.ModMenus;
-import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
