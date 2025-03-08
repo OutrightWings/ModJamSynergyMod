@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.Random;
 
 public class MagicProps {
+
     int minPotionTime = 20*3;
     int minFireFreezeTime = 20;
     Elements.CastingForms castingForm;
@@ -30,13 +31,14 @@ public class MagicProps {
 
     //Server side props
     public ItemStack potion = null;
+    public ItemStack projectile = Items.AIR.getDefaultInstance();
     public int fireTicks = 0, freezeTicks = 0;
     float velocity =  .5f, inaccuracy = 0.1f;
     public int lifetime = 10;
     public int damage = 0;
     public float knockback = 0;
     public boolean gravity = true;
-    public boolean isWet = false, isDeath = false, isCold = false;
+    public boolean isWet = false, isDeath = false, isCold = false, isFire = false, isLife = false;
     //Client side props
     public ParticleOptions particle = ParticleTypes.BUBBLE;
 
@@ -95,6 +97,9 @@ public class MagicProps {
                             effects.add(new MobEffectInstance(MobEffects.WATER_BREATHING, counts[i] * minPotionTime));
                         } else {
                             knockback += counts[i] * 0.5f;
+                            if(isCold){
+                                projectile = Items.ICE.getDefaultInstance();
+                            }
                             isWet = true;
                         }
                     }
@@ -118,6 +123,7 @@ public class MagicProps {
                         } else {
                             damage += counts[i];
                             knockback += counts[i] * 0.2f;
+                            projectile = Items.COBBLESTONE.getDefaultInstance();
                         }
                     }
                     break;
@@ -138,6 +144,7 @@ public class MagicProps {
                             effects.add(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, counts[i] * minPotionTime));
                         } else {
                             fireTicks = minFireFreezeTime * counts[i];
+                            isFire = true;
                         }
                     }
                     break;
@@ -148,6 +155,7 @@ public class MagicProps {
         //LIFE
         if(counts[lifeIndex] > 0) {
             effects.add(new MobEffectInstance(MobEffects.REGENERATION, counts[lifeIndex]*minPotionTime));
+            isLife = true;
         }
         if(!effects.isEmpty() || isWet)
             potion = createPotion(effects);

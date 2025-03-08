@@ -34,7 +34,7 @@ public class Elements {
     private static final Map<Point,AttackForms> ATTACK_FORM_MAP = Map.ofEntries(
             //Position is both element ids
             Map.entry(new Point(0,0),AttackForms.SPRAY),
-            Map.entry(new Point(0,1),AttackForms.SPRAY),
+            Map.entry(new Point(0,1),AttackForms.PROJECTILE),
             Map.entry(new Point(0,2),AttackForms.PROJECTILE),
             Map.entry(new Point(0,3),AttackForms.SPRAY),
             Map.entry(new Point(0,4),AttackForms.SPRAY),

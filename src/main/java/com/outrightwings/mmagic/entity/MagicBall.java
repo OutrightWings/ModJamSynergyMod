@@ -4,6 +4,7 @@ import com.outrightwings.mmagic.Main;
 import com.outrightwings.mmagic.elements.MagicProps;
 import com.outrightwings.mmagic.tags.ModTags;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -16,10 +17,11 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownPotion;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SpongeBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -34,7 +36,7 @@ public class MagicBall extends ImprovedProjectileEntity implements IEntityWithCo
     private ThrownPotion potion;
     private int damage, fireTicks, freezeTicks;
     private float knockback;
-    private boolean isWet, isDeath, isCold;
+    private boolean isWet, isDeath, isCold, isFire, isLife;
 
     public ParticleOptions particle = ParticleTypes.ANGRY_VILLAGER;
 
@@ -56,7 +58,10 @@ public class MagicBall extends ImprovedProjectileEntity implements IEntityWithCo
         m.particle = props.particle;
         m.isWet = props.isWet;
         m.isDeath = props.isDeath;
-        m.isCold = props.isCold;;
+        m.isCold = props.isCold;
+        m.isFire = props.isFire;
+        m.isLife = props.isLife;
+        m.setItem(props.projectile);
         if(props.potion != null){
             m.potion = InvisiblePotion.getNewPotion(player,level);
             m.potionUUID = m.potion.getUUID();
@@ -166,9 +171,26 @@ public class MagicBall extends ImprovedProjectileEntity implements IEntityWithCo
             if(isDeath && state.is(ModTags.DEATH_DIRTABLE)){
                 level.setBlockAndUpdate(result.getBlockPos(), Blocks.DIRT.defaultBlockState());
             }
-
-            if ((this.isWet && state.is(BlockTags.CONVERTABLE_TO_MUD)) || (isDeath && isWet && state.is(ModTags.DEATH_DIRTABLE))){
+            if (this.isWet && (!isCold || isFire) && state.is(BlockTags.CONVERTABLE_TO_MUD) || isDeath && isWet && (!isCold || isFire) && state.is(ModTags.DEATH_DIRTABLE)){
                 level.setBlockAndUpdate(result.getBlockPos(), Blocks.MUD.defaultBlockState());
+            }
+            BlockPos position_side = result.getBlockPos().relative(result.getDirection());
+            if (isFire && !isWet && level.isEmptyBlock(position_side)) {
+                level.setBlockAndUpdate(position_side, BaseFireBlock.getState(level, position_side));
+            }
+            if (isFire && !isWet && state.is(BlockTags.ICE)){
+                level.setBlockAndUpdate(result.getBlockPos(), Blocks.WATER.defaultBlockState());
+            }
+            if(!this.getItem().is(Items.AIR) && this.getItem().getItem() instanceof BlockItem blockItem){
+                if(isWet && isCold && isFire && this.getItem().is(Items.ICE)){
+                    level.setBlockAndUpdate(position_side, Blocks.WATER.defaultBlockState());
+                } else{
+                    level.setBlockAndUpdate(position_side, blockItem.getBlock().defaultBlockState());
+                }
+            }
+            if(isLife){
+                BoneMealItem.applyBonemeal(ItemStack.EMPTY,level,result.getBlockPos(),(Player)this.getOwner());
+                BoneMealItem.applyBonemeal(ItemStack.EMPTY,level,position_side,(Player)this.getOwner());
             }
         }
     }
@@ -184,8 +206,13 @@ public class MagicBall extends ImprovedProjectileEntity implements IEntityWithCo
             if(isDeath && state.is(ModTags.DEATH_KILLABLE)){
                 level.setBlockAndUpdate(this.blockPosition(), Blocks.AIR.defaultBlockState());
             }
-            if(isCold && state.is(Blocks.WATER)){
+            if(isCold && !isFire && state.is(Blocks.WATER)){
                 level.setBlockAndUpdate(this.blockPosition(), Blocks.FROSTED_ICE.defaultBlockState());
+                this.setDeltaMovement(Vec3.ZERO);
+            }
+            if(isFire && !isWet && state.is(Blocks.WATER)){
+                level.setBlockAndUpdate(this.blockPosition(), Blocks.SPONGE.defaultBlockState());
+                level.setBlockAndUpdate(this.blockPosition(), Blocks.AIR.defaultBlockState());
                 this.setDeltaMovement(Vec3.ZERO);
             }
         }
@@ -204,6 +231,8 @@ public class MagicBall extends ImprovedProjectileEntity implements IEntityWithCo
         nbt.putBoolean("wet",isWet);
         nbt.putBoolean("death",isDeath);
         nbt.putBoolean("cold",isCold);
+        nbt.putBoolean("fire",isFire);
+        nbt.putBoolean("life",isLife);
     }
     @Override
     public void readAdditionalSaveData(CompoundTag nbt) {
@@ -219,6 +248,8 @@ public class MagicBall extends ImprovedProjectileEntity implements IEntityWithCo
         isWet = nbt.getBoolean("wet");
         isDeath = nbt.getBoolean("death");
         isCold = nbt.getBoolean("cold");
+        isFire = nbt.getBoolean("fire");
+        isLife = nbt.getBoolean("life");
     }
     private ThrownPotion getPotionEntity() {
         if (potion == null && potionUUID != null) {
