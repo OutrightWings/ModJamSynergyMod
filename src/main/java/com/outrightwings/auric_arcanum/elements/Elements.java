@@ -9,9 +9,11 @@ import java.util.Map;
 public class Elements {
     public static final int MAX_SELECTED = 6;
     public enum CastingForms {
-        RAY,
-        WALL,
-        SELF
+        PROJECTILE,
+        SELF;
+        public static String getTranslationKey(int id){
+            return "form."+ Main.MODID+"." + values()[id].name();
+        }
     }
     public enum ElementType {
         NONE,
@@ -66,7 +68,7 @@ public class Elements {
             //Position is both element ids
             Map.entry(new Point(0,0),ParticleTypes.FLAME),
             Map.entry(new Point(0,1),ParticleTypes.SNOWFLAKE),
-            Map.entry(new Point(0,2),ParticleTypes.WHITE_ASH),
+            Map.entry(new Point(0,2),ParticleTypes.FALLING_LAVA),
             Map.entry(new Point(0,3),ParticleTypes.FLAME),
             Map.entry(new Point(0,4),ParticleTypes.FLAME),
             Map.entry(new Point(0,5),ParticleTypes.CLOUD),

@@ -4,6 +4,7 @@ import com.outrightwings.auric_arcanum.elements.MagicProps;
 import com.outrightwings.auric_arcanum.tags.ModTags;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -11,6 +12,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -118,29 +120,8 @@ public class MagicBall extends ImprovedProjectileEntity implements IEntityWithCo
         super.onHitEntity(result);
         if (!this.level().isClientSide) {
             Entity entity = result.getEntity();
-
-            // Apply damage if greater than 0
-            if (damage > 0) {
-                entity.hurt(this.damageSources().thrown(this, this.getOwner()), damage);
-            }
-
-            // Apply fire ticks if greater than 0
-            if (fireTicks > 0) {
-                entity.setRemainingFireTicks(fireTicks);
-                entity.setSharedFlagOnFire(true);
-            }
-
-            // Apply freeze ticks if greater than 0
-            if (freezeTicks > 0 && entity instanceof LivingEntity livingEntity) {
-                livingEntity.setIsInPowderSnow(true);
-                livingEntity.setTicksFrozen(livingEntity.getTicksRequiredToFreeze()+ freezeTicks *10);
-            }
-
-            // Apply knockback
-            if (knockback > 0 && entity instanceof LivingEntity livingEntity) {
-                Vec3 motion = entity.position().subtract(this.position()).normalize().scale(knockback);
-                livingEntity.push(motion.x, 0.1, motion.z);
-            }
+            Vec3 motion = entity.position().subtract(this.position()).normalize().scale(knockback);
+            MagicProps.castOnEntity(entity,this.level(),motion,damage,freezeTicks,knockback,fireTicks,false,null);
         }
     }
     @Override
@@ -180,7 +161,10 @@ public class MagicBall extends ImprovedProjectileEntity implements IEntityWithCo
                 level.setBlockAndUpdate(result.getBlockPos(), Blocks.WATER.defaultBlockState());
             }
             if(!this.getItem().is(Items.AIR) && this.getItem().getItem() instanceof BlockItem blockItem){
-                if(isWet && isCold && isFire && this.getItem().is(Items.ICE)){
+                if(this.getItem().is(Items.MAGMA_BLOCK)){
+                    //don't place it
+                }
+                else if(isWet && isCold && isFire && this.getItem().is(Items.ICE)){
                     level.setBlockAndUpdate(position_side, Blocks.WATER.defaultBlockState());
                 } else{
                     level.setBlockAndUpdate(position_side, blockItem.getBlock().defaultBlockState());

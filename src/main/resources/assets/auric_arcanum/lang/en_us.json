@@ -13,5 +13,8 @@
   "element.auric_arcanum.ROCK": "Rock",
   "element.auric_arcanum.LIFE": "Life",
   "element.auric_arcanum.DEATH": "Death",
-  "element.auric_arcanum.WATER": "Water"
+  "element.auric_arcanum.WATER": "Water",
+
+  "form.auric_arcanum.PROJECTILE": "Projectile Cast",
+  "form.auric_arcanum.SELF": "Self Cast"
 }

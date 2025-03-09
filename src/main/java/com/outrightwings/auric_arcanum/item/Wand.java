@@ -5,6 +5,7 @@ import com.outrightwings.auric_arcanum.elements.Elements;
 import com.outrightwings.auric_arcanum.elements.MagicProps;
 import com.outrightwings.auric_arcanum.network.components.ModComponents;
 import com.outrightwings.auric_arcanum.network.components.SelectedElementsComponent;
+import com.outrightwings.auric_arcanum.network.components.SelectedFormComponent;
 import com.outrightwings.auric_arcanum.ui.ElementMenu;
 import net.mehvahdjukaar.moonlight.api.item.ILeftClickReact;
 import net.minecraft.ChatFormatting;
@@ -29,7 +30,10 @@ public class Wand extends Item implements ILeftClickReact {
     }
     @Override
     public void appendHoverText(ItemStack item, Item.TooltipContext context, List<Component> list, TooltipFlag flag) {
+        SelectedFormComponent formComponent = item.get(ModComponents.SELECTED_FORM_COMPONENT);
         SelectedElementsComponent elementsComponent = item.get(ModComponents.SELECTED_ELEMENTS_COMPONENT);
+
+        list.add(Component.translatable(Elements.CastingForms.getTranslationKey(formComponent.id())).withStyle(ChatFormatting.GRAY));
         int[] counts = MagicProps.countElements(elementsComponent.elements());
         for(int id = 0; id < counts.length; id++){
             String name = Elements.ElementType.getTranslationKey(id+1);
