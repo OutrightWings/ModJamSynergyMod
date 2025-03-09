@@ -156,12 +156,16 @@ public class MagicProps {
                     if(counts[i] > 0) {
                         isCold = true;
                         fireTicks = 0;
-
-                        effects.add(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, counts[i]*minPotionTime));
-                        effects.add(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, counts[i] * minPotionTime));
-                        if (counts[i] > 1 && !isFire) {
-                            freezeTicks = minFireFreezeTime * (counts[i] - 1);
+                        if(!isFire){
+                            effects.add(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, counts[i]*minPotionTime));
+                            effects.add(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, counts[i] * minPotionTime));
+                            if (counts[i] > 1) {
+                                freezeTicks = minFireFreezeTime * (counts[i] - 1);
+                            }
+                        } else{
+                            effects.add(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, counts[i] * minPotionTime));
                         }
+
                     }
                     break;
                 case FIRE:
@@ -184,7 +188,7 @@ public class MagicProps {
             effects.add(new MobEffectInstance(MobEffects.REGENERATION, counts[lifeIndex]*minPotionTime));
             isLife = true;
         }
-        if(!effects.isEmpty() || isWet)
+        if(!effects.isEmpty() || (isWet&&!isFire))
             potion = createPotion(effects);
     }
     public boolean cast(Player player, Level level, ItemStack itemStack){
