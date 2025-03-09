@@ -37,7 +37,7 @@ public class MagicBall extends ImprovedProjectileEntity implements IEntityWithCo
     private ThrownPotion potion;
     private int damage, fireTicks, freezeTicks;
     private float knockback;
-    private boolean isWet, isDeath, isCold, isFire, isLife;
+    private boolean isWet, isDeath, isCold, isFire, isLife, isRock;
 
     public ParticleOptions particle = ParticleTypes.ANGRY_VILLAGER;
 
@@ -63,6 +63,7 @@ public class MagicBall extends ImprovedProjectileEntity implements IEntityWithCo
         m.isFire = props.isFire;
         m.isLife = props.isLife;
         m.setItem(props.projectile);
+        m.isRock = props.isRock;
         if(props.potion != null){
             m.potion = InvisiblePotion.getNewPotion(player,level);
             m.potionUUID = m.potion.getUUID();
@@ -132,7 +133,13 @@ public class MagicBall extends ImprovedProjectileEntity implements IEntityWithCo
                 this.potion.onHit(result);
                 this.potion = null;
             }
-            if(isFire && isDeath){
+            if(isDeath && isRock){
+                Vec3 hit = result.getLocation();
+                level().explode(this,hit.x,hit.y,hit.z,.5f, false, Level.ExplosionInteraction.BLOCK);
+                this.setItem(Items.AIR.getDefaultInstance());
+                this.setDeltaMovement(Vec3.ZERO);
+            }
+            else if(isFire && isDeath){
                 var lightning = EntityType.LIGHTNING_BOLT.create(level());
                 lightning.moveTo(result.getLocation());
                 level().addFreshEntity(lightning);

@@ -116,6 +116,11 @@ public class MagicProps {
                     break;
                 case DEATH:
                     if(counts[i] > 0) {
+                        int waterIndex = Elements.ElementType.WATER.ordinal()-1;
+                        if(counts[waterIndex] > 0){
+                            counts[i]--;
+                            effects.add(new MobEffectInstance(MobEffects.POISON, counts[i]*minPotionTime));
+                        }
                         if (counts[lifeIndex] != 0) {
                             counts[lifeIndex]--;
                             effects.add(new MobEffectInstance(MobEffects.WITHER, counts[i]*minPotionTime));

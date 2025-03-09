@@ -69,8 +69,8 @@ public class Elements {
             Map.entry(new Point(0,0),ParticleTypes.FLAME),
             Map.entry(new Point(0,1),ParticleTypes.SNOWFLAKE),
             Map.entry(new Point(0,2),ParticleTypes.FALLING_LAVA),
-            Map.entry(new Point(0,3),ParticleTypes.FLAME),
-            Map.entry(new Point(0,4),ParticleTypes.FLAME),
+            Map.entry(new Point(0,3),ParticleTypes.LAVA),
+            Map.entry(new Point(0,4),ParticleTypes.ELECTRIC_SPARK),
             Map.entry(new Point(0,5),ParticleTypes.CLOUD),
 
             Map.entry(new Point(1,1),ParticleTypes.SNOWFLAKE),
@@ -81,14 +81,14 @@ public class Elements {
 
             Map.entry(new Point(2,2),ParticleTypes.WHITE_ASH),
             Map.entry(new Point(2,3),ParticleTypes.WHITE_ASH),
-            Map.entry(new Point(2,4),ParticleTypes.WHITE_ASH),
+            Map.entry(new Point(2,4),ParticleTypes.DUST_PLUME),
             Map.entry(new Point(2,5),ParticleTypes.WHITE_ASH),
 
-            Map.entry(new Point(3,3),ParticleTypes.WAX_OFF),
+            Map.entry(new Point(3,3),ParticleTypes.COMPOSTER),
             Map.entry(new Point(3,4),ParticleTypes.ASH),
             Map.entry(new Point(3,5),ParticleTypes.BUBBLE),
 
-            Map.entry(new Point(4,4),ParticleTypes.ASH),
+            Map.entry(new Point(4,4),ParticleTypes.CRIT),
             Map.entry(new Point(4,5),ParticleTypes.BUBBLE),
 
             Map.entry(new Point(5,5),ParticleTypes.BUBBLE)
