@@ -15,6 +15,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownPotion;
@@ -131,6 +132,11 @@ public class MagicBall extends ImprovedProjectileEntity implements IEntityWithCo
                 this.potion.onHit(result);
                 this.potion = null;
             }
+            if(isFire && isDeath){
+                var lightning = EntityType.LIGHTNING_BOLT.create(level());
+                lightning.moveTo(result.getLocation());
+                level().addFreshEntity(lightning);
+            }
         }
         super.onHit(result);
     }
@@ -161,10 +167,7 @@ public class MagicBall extends ImprovedProjectileEntity implements IEntityWithCo
                 level.setBlockAndUpdate(result.getBlockPos(), Blocks.WATER.defaultBlockState());
             }
             if(!this.getItem().is(Items.AIR) && this.getItem().getItem() instanceof BlockItem blockItem){
-                if(this.getItem().is(Items.MAGMA_BLOCK)){
-                    //don't place it
-                }
-                else if(isWet && isCold && isFire && this.getItem().is(Items.ICE)){
+                if(isWet && isCold && isFire && this.getItem().is(Items.ICE)){
                     level.setBlockAndUpdate(position_side, Blocks.WATER.defaultBlockState());
                 } else{
                     level.setBlockAndUpdate(position_side, blockItem.getBlock().defaultBlockState());
