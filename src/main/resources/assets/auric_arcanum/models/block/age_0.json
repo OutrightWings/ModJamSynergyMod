@@ -1,0 +1,6 @@
+{
+  "parent": "auric_arcanum:block/magic_block",
+  "textures": {
+    "0": "auric_arcanum:block/age_0"
+  }
+}

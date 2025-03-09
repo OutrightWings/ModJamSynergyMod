@@ -1,6 +1,7 @@
 package com.outrightwings.auric_arcanum.elements;
 
 import com.outrightwings.auric_arcanum.Main;
+import com.outrightwings.auric_arcanum.blocks.ModBlocks;
 import com.outrightwings.auric_arcanum.entity.MagicBall;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
@@ -18,6 +19,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
@@ -75,6 +77,8 @@ public class MagicProps {
         if(a != -1 && b == -1){
             b = a;
         }
+        if(a == b && a == 0) gravity = false;
+        if((a == 0 && b == 1) || (b == 0 && a == 1)) gravity = false;
         this.particle = Elements.getParticle(a,b);
         return Elements.getAttackForm(a,b);
     }
@@ -102,15 +106,13 @@ public class MagicProps {
                             counts[lifeIndex]--;
                             effects.add(new MobEffectInstance(MobEffects.WATER_BREATHING, counts[i] * minPotionTime));
                         } else {
+                            fireTicks = 0;
                             knockback += counts[i] * 0.5f;
-                            if(isRock && isCold)
-                                projectile = Items.BLUE_ICE.getDefaultInstance();
-                            else if(isCold){
-                                projectile = Items.ICE.getDefaultInstance();
+                            if(isCold){
+                                projectile = ModBlocks.TEMP_MAGIC_ICE.asItem().getDefaultInstance();
                             } else if (isRock)
-                                projectile = Items.CLAY.getDefaultInstance();
+                                projectile = ModBlocks.TEMP_MAGIC_CLAY.asItem().getDefaultInstance();
                             isWet = true;
-
                         }
                     }
                     break;
@@ -119,12 +121,14 @@ public class MagicProps {
                         int waterIndex = Elements.ElementType.WATER.ordinal()-1;
                         if(counts[waterIndex] > 0){
                             counts[i]--;
-                            effects.add(new MobEffectInstance(MobEffects.POISON, counts[i]*minPotionTime));
+                            effects.add(new MobEffectInstance(MobEffects.POISON, counts[waterIndex]*minPotionTime));
                         }
                         if (counts[lifeIndex] != 0) {
                             counts[lifeIndex]--;
                             effects.add(new MobEffectInstance(MobEffects.WITHER, counts[i]*minPotionTime));
                         } else {
+                            if(isRock)
+                                projectile = Items.AIR.getDefaultInstance();
                             damage += counts[i];
                             isDeath = true;
                         }
@@ -140,24 +144,22 @@ public class MagicProps {
                             damage += counts[i];
                             knockback += counts[i] * 0.2f;
                             if(isFire)
-                                projectile = Items.MAGMA_BLOCK.getDefaultInstance();
+                                projectile = ModBlocks.TEMP_MAGIC_MAGMA.asItem().getDefaultInstance();
                             else if (isCold)
-                                projectile = Items.PACKED_ICE.getDefaultInstance();
-                            else if (isDeath)
-                                projectile = Items.SOUL_SAND.getDefaultInstance();
-                            else if (isWet)
-                                projectile = Items.CLAY.getDefaultInstance();
+                                projectile = ModBlocks.TEMP_MAGIC_ICE.asItem().getDefaultInstance();
                             else
-                                projectile = Items.COBBLESTONE.getDefaultInstance();
+                                projectile = ModBlocks.TEMP_MAGIC_STONE.asItem().getDefaultInstance();
                         }
                     }
                     break;
                 case ICE:
                     if(counts[i] > 0) {
                         isCold = true;
+                        fireTicks = 0;
+
                         effects.add(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, counts[i]*minPotionTime));
                         effects.add(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, counts[i] * minPotionTime));
-                        if (counts[i] > 1) {
+                        if (counts[i] > 1 && !isFire) {
                             freezeTicks = minFireFreezeTime * (counts[i] - 1);
                         }
                     }
@@ -264,7 +266,6 @@ public class MagicProps {
         m.placeInWorld(level);
     }
     private void spawnSpray(Player player, Level level){
-        this.gravity = true;
         Random random = new Random();
         int count = 0;
         for(var element : rawElements){
@@ -281,7 +282,6 @@ public class MagicProps {
         }
     }
     private void spawnBall(Player player, Level level){
-        this.gravity = true;
         MagicBall m = MagicBall.spawnAtPlayer(player,level, this);
         m.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, velocity, inaccuracy);
         m.placeInWorld(level);

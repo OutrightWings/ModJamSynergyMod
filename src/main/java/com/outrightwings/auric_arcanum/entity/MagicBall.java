@@ -1,5 +1,6 @@
 package com.outrightwings.auric_arcanum.entity;
 
+import com.outrightwings.auric_arcanum.blocks.ModBlocks;
 import com.outrightwings.auric_arcanum.elements.MagicProps;
 import com.outrightwings.auric_arcanum.tags.ModTags;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
@@ -124,10 +125,12 @@ public class MagicBall extends ImprovedProjectileEntity implements IEntityWithCo
             Entity entity = result.getEntity();
             Vec3 motion = entity.position().subtract(this.position()).normalize().scale(knockback);
             MagicProps.castOnEntity(entity,this.level(),motion,damage,freezeTicks,knockback,fireTicks,false,null);
+            this.setItem(Items.AIR.getDefaultInstance());
         }
     }
     @Override
     protected void onHit(HitResult result) {
+        super.onHit(result);
         if (!this.level().isClientSide) {
             if(potion != null){
                 this.potion.onHit(result);
@@ -136,16 +139,17 @@ public class MagicBall extends ImprovedProjectileEntity implements IEntityWithCo
             if(isDeath && isRock){
                 Vec3 hit = result.getLocation();
                 level().explode(this,hit.x,hit.y,hit.z,.5f, false, Level.ExplosionInteraction.BLOCK);
-                this.setItem(Items.AIR.getDefaultInstance());
-                this.setDeltaMovement(Vec3.ZERO);
+                //this.setItem(Items.AIR.getDefaultInstance());
+                this.reachedEndOfLife();
             }
             else if(isFire && isDeath){
                 var lightning = EntityType.LIGHTNING_BOLT.create(level());
                 lightning.moveTo(result.getLocation());
                 level().addFreshEntity(lightning);
+                this.setItem(Items.AIR.getDefaultInstance());
+                this.reachedEndOfLife();
             }
         }
-        super.onHit(result);
     }
     @Override
     protected void onHitBlock(BlockHitResult result) {
@@ -164,17 +168,17 @@ public class MagicBall extends ImprovedProjectileEntity implements IEntityWithCo
                 level.setBlockAndUpdate(result.getBlockPos(), Blocks.DIRT.defaultBlockState());
             }
             if (this.isWet && (!isCold || isFire) && state.is(BlockTags.CONVERTABLE_TO_MUD) || isDeath && isWet && (!isCold || isFire) && state.is(ModTags.DEATH_DIRTABLE)){
-                level.setBlockAndUpdate(result.getBlockPos(), Blocks.MUD.defaultBlockState());
+                level.setBlockAndUpdate(result.getBlockPos(), ModBlocks.TEMP_MAGIC_MUD.get().defaultBlockState());
             }
             BlockPos position_side = result.getBlockPos().relative(result.getDirection());
-            if (isFire && !isWet && level.isEmptyBlock(position_side)) {
+            if (isFire && !isWet && !isCold && level.isEmptyBlock(position_side)) {
                 level.setBlockAndUpdate(position_side, BaseFireBlock.getState(level, position_side));
             }
-            if (isFire && !isWet && state.is(BlockTags.ICE)){
+            if (isFire && !isWet && !isCold && state.is(BlockTags.ICE)){
                 level.setBlockAndUpdate(result.getBlockPos(), Blocks.WATER.defaultBlockState());
             }
             if(!this.getItem().is(Items.AIR) && this.getItem().getItem() instanceof BlockItem blockItem){
-                if(isWet && isCold && isFire && this.getItem().is(Items.ICE)){
+                if(isWet && isCold && isFire && this.getItem().is(ModBlocks.TEMP_MAGIC_ICE.asItem())){
                     level.setBlockAndUpdate(position_side, Blocks.WATER.defaultBlockState());
                 } else{
                     level.setBlockAndUpdate(position_side, blockItem.getBlock().defaultBlockState());

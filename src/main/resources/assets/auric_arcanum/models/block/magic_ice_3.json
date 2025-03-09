@@ -1,6 +1,6 @@
 {
   "parent": "auric_arcanum:block/age_3",
   "textures": {
-    "1": "minecraft:block/cobblestone"
+    "1": "minecraft:block/packed_ice"
   }
 }

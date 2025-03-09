@@ -1,4 +1,10 @@
 {
+  "block.auric_arcanum.magic_stone": "Magic Stone",
+  "block.auric_arcanum.magic_mud": "Magic Mud",
+  "block.auric_arcanum.magic_clay": "Magic Clay",
+  "block.auric_arcanum.magic_ice": "Magic Ice",
+  "block.auric_arcanum.magic_magma": "Magic Magma",
+
   "item.auric_arcanum.blue_wand": "Lapis Staff",
   "item.auric_arcanum.red_wand": "Redstone Staff",
   "item.auric_arcanum.green_wand": "Emerald Staff",
